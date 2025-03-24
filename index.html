@@ -11,13 +11,6 @@
     <meta name="author" content="1337Xtreme">
     <meta name="robots" content="index, follow">
 
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Top 1000 PC Games | Free Download">
-    <meta property="og:description" content="Find the top 1000 PC games with official store links.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://your-site.com/top-1000-pc-games">
-    <meta property="og:image" content="https://your-site.com/game-thumbnail.jpg">
-
     <!-- Load API Key -->
     <script src="games.js"></script>
 
@@ -30,7 +23,6 @@
         "itemListElement": []
     }
     </script>
-
 </head>
 <body>
 
@@ -54,6 +46,26 @@
         const gamesPerPage = 50;
         let allGames = [];
 
+        async function fetchGames(pageNumber = 1) {
+            let apiUrl = `https://api.rawg.io/api/games?key=${config.API_KEY}&page_size=50&page=${pageNumber}&platforms=4`;
+
+            try {
+                let response = await fetch(apiUrl);
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                let data = await response.json();
+                if (!data.results) throw new Error("No game data found.");
+
+                return data.results.map((game, index) => ({
+                    position: (pageNumber - 1) * 50 + index + 1,
+                    name: game.name,
+                    url: `https://www.google.com/search?q=${encodeURIComponent(game.name + " free download")}` // Faster: No extra API call
+                }));
+            } catch (error) {
+                console.error("❌ Game Fetch Error:", error);
+                return [];
+            }
+        }
+
         async function fetchAllGames() {
             document.getElementById("game-list").innerHTML = "<tr><td colspan='2'>Loading games...</td></tr>";
 
@@ -62,64 +74,23 @@
                 return;
             }
 
-            let apiUrl = `https://api.rawg.io/api/games?key=${config.API_KEY}&page_size=50&platforms=4`;
+            // ✅ Load first 50 games instantly
+            allGames = await fetchGames(1);
+            displayGames();
+            createPagination();
+            injectStaticSchema();
 
-            try {
-                allGames = [];
-                let positionCounter = 1;
-
-                for (let i = 1; i <= 20; i++) {  // Fetching 20 pages (1000 games)
-                    let response = await fetch(apiUrl + "&page=" + i);
-                    if (!response.ok) throw new Error(`❌ HTTP error! Status: ${response.status}`);
-                    let data = await response.json();
-                    if (!data.results) throw new Error("❌ No game data found.");
-
-                    for (let game of data.results) {
-                        let gameUrl = await getGameStoreUrl(game.id);
-                        allGames.push({ 
-                            position: positionCounter, 
-                            name: game.name, 
-                            url: gameUrl 
-                        });
-                        positionCounter++;
-                    }
-                }
-
-                console.log("✅ Games Loaded:", allGames.length, "games.");
-
-                displayGames();
-                createPagination();
-                injectStaticSchema();
-            } catch (error) {
-                console.error("❌ Game Fetch Error:", error);
-                document.getElementById("game-list").innerHTML = "<tr><td colspan='2'>Failed to load games.</td></tr>";
+            // ✅ Fetch remaining games in the background (without blocking display)
+            for (let i = 2; i <= 20; i++) {
+                let moreGames = await fetchGames(i);
+                allGames = allGames.concat(moreGames);
             }
-        }
 
-        async function getGameStoreUrl(gameId) {
-            let gameDetailsUrl = `https://api.rawg.io/api/games/${gameId}?key=${config.API_KEY}`;
-            try {
-                let response = await fetch(gameDetailsUrl);
-                if (!response.ok) throw new Error(`Error fetching game details: ${response.status}`);
-                let gameData = await response.json();
-                
-                if (gameData.stores && gameData.stores.length > 0) {
-                    return gameData.stores[0].url;
-                } else {
-                    return `https://www.google.com/search?q=${encodeURIComponent(gameData.name + " free download")}`;
-                }
-            } catch (error) {
-                console.error(`Error fetching store URL for game ID ${gameId}:`, error);
-                return `https://www.google.com/search?q=${encodeURIComponent(gameData.name + " free download")}`;
-            }
+            console.log("✅ All Games Loaded:", allGames.length);
+            injectStaticSchema(); // ✅ Update Schema once all games load
         }
 
         function displayGames() {
-            if (allGames.length === 0) {
-                console.error("❌ No games available to display.");
-                return;
-            }
-
             let start = (currentPage - 1) * gamesPerPage;
             let end = start + gamesPerPage;
             let paginatedGames = allGames.slice(start, end);
@@ -127,8 +98,6 @@
             document.getElementById("game-list").innerHTML = paginatedGames.map(game =>
                 `<tr><td>${game.position}</td><td><a href="${game.url}" target="_blank">${game.name}</a></td></tr>`
             ).join("");
-
-            console.log("✅ Displaying Games:", paginatedGames.length);
 
             updateMetaTags(paginatedGames);
         }
