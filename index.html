@@ -59,7 +59,7 @@
                 // Fetch game store URLs
                 let gameList = [];
                 for (let game of data.results) {
-                    let storeUrl = await getGameStoreUrl(game.id);
+                    let storeUrl = await getGameStoreUrl(game.id, game.name);
                     gameList.push({
                         position: (pageNumber - 1) * 50 + gameList.length + 1,
                         name: game.name,
@@ -73,7 +73,7 @@
             }
         }
 
-        async function getGameStoreUrl(gameId) {
+        async function getGameStoreUrl(gameId, gameName) {
             let gameDetailsUrl = `https://api.rawg.io/api/games/${gameId}?key=${config.API_KEY}`;
             try {
                 let response = await fetch(gameDetailsUrl);
@@ -83,11 +83,11 @@
                 if (gameData.stores && gameData.stores.length > 0) {
                     return gameData.stores[0].url; // ✅ Link to real store (Steam, Epic, etc.)
                 } else {
-                    return `https://store.steampowered.com/`; // ✅ Generic fallback, NOT Google
+                    return `https://www.ign.com/search?q=${encodeURIComponent(gameName)}`; // ✅ Actual game-related site
                 }
             } catch (error) {
                 console.error(`Error fetching store URL for game ID ${gameId}:`, error);
-                return `https://store.steampowered.com/`;
+                return `https://www.ign.com/search?q=${encodeURIComponent(gameName)}`;
             }
         }
 
