@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top 1000 PC Games | Free Download</title>
 
-    <!-- Default SEO Meta Tags (Updated Dynamically) -->
+    <!-- Default SEO Meta Tags (Updated Per Game) -->
     <meta name="description" content="Find and download the best 1000 PC games for free. Get trending RPGs, battle royale, and strategy games.">
     <meta name="keywords" content="best PC games, free game download, RPG games, strategy games, battle royale, FPS games">
     <meta name="author" content="1337Xtreme">
@@ -21,8 +21,15 @@
     <!-- Load API Key -->
     <script src="games.js"></script>
 
-    <!-- Schema Markup -->
-    <script type="application/ld+json" id="schema-data"></script>
+    <!-- Preload Empty Schema for Google -->
+    <script type="application/ld+json" id="schema-data">
+    {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Top 1000 PC Games",
+        "itemListElement": []
+    }
+    </script>
 
 </head>
 <body>
@@ -67,7 +74,6 @@
                     let data = await response.json();
                     if (!data.results) throw new Error("❌ No game data found.");
 
-                    // Get individual game URLs
                     for (let game of data.results) {
                         let gameUrl = await getGameStoreUrl(game.id);
                         allGames.push({ 
@@ -81,9 +87,10 @@
 
                 console.log("✅ Games Loaded:", allGames.length, "games.");
 
-                displayGames(); // ✅ Now display games
+                displayGames();
                 createPagination();
-                updateSchemaMarkup();
+                updateMetaTags();
+                injectStaticSchema();
             } catch (error) {
                 console.error("❌ Game Fetch Error:", error);
                 document.getElementById("game-list").innerHTML = "<tr><td colspan='2'>Failed to load games.</td></tr>";
@@ -98,13 +105,13 @@
                 let gameData = await response.json();
                 
                 if (gameData.stores && gameData.stores.length > 0) {
-                    return gameData.stores[0].url;  // Return the first available store link
+                    return gameData.stores[0].url;
                 } else {
-                    return `https://www.google.com/search?q=${encodeURIComponent(gameData.name + " free download")}`;  // Fallback to Google
+                    return `https://www.google.com/search?q=${encodeURIComponent(gameData.name + " free download")}`;
                 }
             } catch (error) {
                 console.error(`Error fetching store URL for game ID ${gameId}:`, error);
-                return `https://www.google.com/search?q=${encodeURIComponent(gameData.name + " free download")}`;  // Fallback URL
+                return `https://www.google.com/search?q=${encodeURIComponent(gameData.name + " free download")}`;
             }
         }
 
@@ -122,10 +129,7 @@
                 `<tr><td>${game.position}</td><td><a href="${game.url}" target="_blank">${game.name}</a></td></tr>`
             ).join("");
 
-            console.log("✅ Displaying Games:", paginatedGames.length);
-
-            // ✅ Ensure meta tags update only after games are visible
-            setTimeout(() => updateMetaTags(paginatedGames), 500);
+            updateMetaTags();
         }
 
         function createPagination() {
@@ -134,38 +138,42 @@
                 Array.from({ length: totalPages }, (_, i) => `<a href="?page=${i + 1}">${i + 1}</a>`).join(" | ");
         }
 
-        function updateMetaTags(games) {
-            if (games.length === 0) return;
+        function updateMetaTags() {
+            if (allGames.length === 0) return;
 
-            let firstGameName = games[0].name;
-            let pageTitle = `${firstGameName} Free Download | Top PC Games`;
-            document.title = pageTitle;
+            let paginatedGames = allGames.slice((currentPage - 1) * gamesPerPage, currentPage * gamesPerPage);
+            let firstGameName = paginatedGames.length > 0 ? paginatedGames[0].name : "Best PC Games";
+            document.title = `${firstGameName} Free Download | Top PC Games`;
 
             let metaDescription = `Find and download ${firstGameName} for free. Explore the best PC games available now!`;
-            let metaKeywords = games.map(game => game.name + " free download").join(", ");
+            let metaKeywords = paginatedGames.map(game => game.name + " free download").join(", ");
 
             document.querySelector("meta[name='description']").setAttribute("content", metaDescription);
             document.querySelector("meta[name='keywords']").setAttribute("content", metaKeywords);
 
-            console.log("✅ Meta tags updated:", { title: pageTitle, description: metaDescription, keywords: metaKeywords });
+            console.log("✅ Meta Tags Updated:", { title: document.title, description: metaDescription, keywords: metaKeywords });
         }
 
-        function updateSchemaMarkup() {
-            let paginatedGames = allGames.slice((currentPage - 1) * gamesPerPage, currentPage * gamesPerPage);
-
+        function injectStaticSchema() {
             let schemaData = {
                 "@context": "https://schema.org",
                 "@type": "ItemList",
-                "name": `Top 1000 PC Games - Page ${currentPage}`,
-                "itemListElement": paginatedGames.map((game, index) => ({
+                "name": "Top 1000 PC Games",
+                "itemListElement": allGames.map((game, index) => ({
                     "@type": "ListItem",
-                    "position": (currentPage - 1) * gamesPerPage + index + 1,
+                    "position": index + 1,
                     "name": game.name,
                     "url": game.url
                 }))
             };
 
-            document.getElementById("schema-data").textContent = JSON.stringify(schemaData, null, 2);
+            let schemaScript = `<script type="application/ld+json">${JSON.stringify(schemaData, null, 2)}</script>`;
+
+            let schemaContainer = document.getElementById("schema-data");
+            schemaContainer.remove();
+            document.head.insertAdjacentHTML("beforeend", schemaScript);
+
+            console.log("✅ Schema Injected:", schemaData);
         }
 
         fetchAllGames();
