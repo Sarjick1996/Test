@@ -48,10 +48,10 @@
         let allGames = [];
 
         async function fetchAllGames() {
-            document.getElementById("game-list").innerHTML = "<tr><td colspan='2'>Loading 1000 games...</td></tr>";
+            document.getElementById("game-list").innerHTML = "<tr><td colspan='2'>Loading games...</td></tr>";
 
             if (typeof config === "undefined" || !config.API_KEY) {
-                console.error("API key is missing or games.js is not loaded.");
+                console.error("❌ API key is missing or games.js is not loaded.");
                 return;
             }
 
@@ -63,9 +63,9 @@
 
                 for (let i = 1; i <= 20; i++) {  // Fetching 20 pages (1000 games)
                     let response = await fetch(apiUrl + "&page=" + i);
-                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    if (!response.ok) throw new Error(`❌ HTTP error! Status: ${response.status}`);
                     let data = await response.json();
-                    if (!data.results) throw new Error("No game data found");
+                    if (!data.results) throw new Error("❌ No game data found.");
 
                     // Get individual game URLs
                     for (let game of data.results) {
@@ -77,16 +77,16 @@
                         });
                         positionCounter++;
                     }
-
-                    console.log(`Loaded ${allGames.length} games so far...`);
                 }
 
-                displayGames();
+                console.log("✅ Games Loaded:", allGames.length, "games.");
+
+                displayGames(); // ✅ Now display games
                 createPagination();
                 updateSchemaMarkup();
             } catch (error) {
-                console.error("Game Fetch Error:", error);
-                document.getElementById("game-list").innerHTML = "<tr><td colspan='2'>Failed to load games. Please check your API key and network connection.</td></tr>";
+                console.error("❌ Game Fetch Error:", error);
+                document.getElementById("game-list").innerHTML = "<tr><td colspan='2'>Failed to load games.</td></tr>";
             }
         }
 
@@ -109,6 +109,11 @@
         }
 
         function displayGames() {
+            if (allGames.length === 0) {
+                console.error("❌ No games available to display.");
+                return;
+            }
+
             let start = (currentPage - 1) * gamesPerPage;
             let end = start + gamesPerPage;
             let paginatedGames = allGames.slice(start, end);
@@ -117,14 +122,32 @@
                 `<tr><td>${game.position}</td><td><a href="${game.url}" target="_blank">${game.name}</a></td></tr>`
             ).join("");
 
-            updateMetaTags(paginatedGames);
-            updateSchemaMarkup();
+            console.log("✅ Displaying Games:", paginatedGames.length);
+
+            // ✅ Ensure meta tags update only after games are visible
+            setTimeout(() => updateMetaTags(paginatedGames), 500);
         }
 
         function createPagination() {
             let totalPages = Math.ceil(allGames.length / gamesPerPage);
             document.getElementById("pagination").innerHTML =
                 Array.from({ length: totalPages }, (_, i) => `<a href="?page=${i + 1}">${i + 1}</a>`).join(" | ");
+        }
+
+        function updateMetaTags(games) {
+            if (games.length === 0) return;
+
+            let firstGameName = games[0].name;
+            let pageTitle = `${firstGameName} Free Download | Top PC Games`;
+            document.title = pageTitle;
+
+            let metaDescription = `Find and download ${firstGameName} for free. Explore the best PC games available now!`;
+            let metaKeywords = games.map(game => game.name + " free download").join(", ");
+
+            document.querySelector("meta[name='description']").setAttribute("content", metaDescription);
+            document.querySelector("meta[name='keywords']").setAttribute("content", metaKeywords);
+
+            console.log("✅ Meta tags updated:", { title: pageTitle, description: metaDescription, keywords: metaKeywords });
         }
 
         function updateSchemaMarkup() {
@@ -143,15 +166,6 @@
             };
 
             document.getElementById("schema-data").textContent = JSON.stringify(schemaData, null, 2);
-        }
-
-        function updateMetaTags(games) {
-            let firstGameName = games.length > 0 ? games[0].name : "Best PC Games";
-            document.title = firstGameName + " Free Download | Top PC Games";
-
-            let metaKeywords = games.map(game => game.name + " free download").join(", ");
-            document.querySelector("meta[name='keywords']").setAttribute("content", metaKeywords);
-            document.querySelector("meta[name='description']").setAttribute("content", `Find and download ${firstGameName} for free. Explore the best PC games available now!`);
         }
 
         fetchAllGames();
