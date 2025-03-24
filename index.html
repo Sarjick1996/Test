@@ -11,7 +11,7 @@
     <meta name="author" content="1337Xtreme">
     <meta name="robots" content="index, follow">
 
-    <!-- Load API Key (Stored Securely in Cloudflare Pages) -->
+    <!-- Load API Key -->
     <script src="games.js"></script>
 
     <!-- Schema Markup Placeholder -->
@@ -38,7 +38,7 @@
         let urlParams = new URLSearchParams(window.location.search);
         let currentPage = parseInt(urlParams.get("page")) || 1;
         const gamesPerPage = 50;
-        let allGames = [];
+        let allGames = new Map(); // Use a Map to prevent duplicate games
         let isLoading = false;
 
         async function fetchGames(pageNumber = 1) {
@@ -72,16 +72,12 @@
                 return;
             }
 
-            allGames = await fetchGames(1);
-            displayGames();
-            createPagination();
-
-            for (let i = 2; i <= 20; i++) {
+            for (let i = 1; i <= 20; i++) {
                 let moreGames = await fetchGames(i);
-                allGames = allGames.concat(moreGames);
+                moreGames.forEach(game => allGames.set(game.id, game)); // Store unique games using their ID
                 displayGames();
                 createPagination();
-                console.log(`✅ Loaded ${allGames.length} games so far`);
+                console.log(`✅ Loaded ${allGames.size} unique games so far`);
             }
 
             isLoading = false;
@@ -91,11 +87,12 @@
 
         async function fetchGameStoreUrls() {
             console.log("🔄 Fetching store URLs...");
-            let gameBatches = allGames.map(game => getGameStoreUrl(game.id, game.name));
+            let gameBatches = Array.from(allGames.values()).map(game => getGameStoreUrl(game.id, game.name));
             let urls = await Promise.all(gameBatches);
 
-            allGames.forEach((game, index) => {
-                game.url = urls[index]; // ✅ Update game URLs
+            let index = 0;
+            allGames.forEach(game => {
+                game.url = urls[index++]; // ✅ Update game URLs
             });
 
             console.log("✅ Store URLs Loaded!");
@@ -111,30 +108,30 @@
                 let gameData = await response.json();
 
                 if (gameData.stores && gameData.stores.length > 0) {
-                    return gameData.stores[0].url; // ✅ Link to real store (Steam, Epic, etc.)
+                    return gameData.stores[0].url; // ✅ Link to store (Steam, Epic, etc.)
                 } else {
-                    return `https://www.ign.com/search?q=${encodeURIComponent(gameName)}`; // ✅ Fallback
+                    return `https://rawg.io/games/${gameId}`; // ✅ Link to RAWG game page instead of IGN
                 }
             } catch (error) {
                 console.error(`Error fetching store URL for game ID ${gameId}:`, error);
-                return `https://www.ign.com/search?q=${encodeURIComponent(gameName)}`;
+                return `https://rawg.io/games/${gameId}`;
             }
         }
 
         function displayGames() {
             let start = (currentPage - 1) * gamesPerPage;
             let end = start + gamesPerPage;
-            let paginatedGames = allGames.slice(start, end);
+            let paginatedGames = Array.from(allGames.values()).slice(start, end);
 
             document.getElementById("game-list").innerHTML = paginatedGames.map(game =>
-                `<tr><td>${game.position}</td><td><a href="${game.url || '#'}" target="_blank">${game.name}</a></td></tr>`
+                `<tr><td>${game.position}</td><td><a href="${game.url}" target="_blank">${game.name}</a></td></tr>`
             ).join("");
 
             updateMetaTags(paginatedGames);
         }
 
         function createPagination() {
-            let totalPages = Math.ceil(allGames.length / gamesPerPage);
+            let totalPages = Math.ceil(allGames.size / gamesPerPage);
             document.getElementById("pagination").innerHTML =
                 Array.from({ length: totalPages }, (_, i) => `<a href="?page=${i + 1}">${i + 1}</a>`).join(" | ");
         }
@@ -160,12 +157,12 @@
                 "@context": "https://schema.org",
                 "@type": "ItemList",
                 "name": "Top 1000 PC Games",
-                "itemListElement": allGames.map((game, index) => ({
+                "itemListElement": Array.from(allGames.values()).map((game, index) => ({
                     "@type": "ListItem",
                     "position": index + 1,
                     "name": game.name,
-                    "url": game.url || "#"
-                }))
+                    "url": game.url
+                })).filter(game => game.url) // ✅ Removes invalid URLs
             };
 
             let schemaScript = document.createElement("script");
