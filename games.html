@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top 1000 PC Games | Free Download</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Download the best 1000 PC games for free! Get trending RPGs, battle royale, and strategy games.">
+    <meta name="keywords" content="best PC games, free game download, trending games, RPG games, strategy games, battle royale, multiplayer, FPS games">
+    <meta name="author" content="1337Xtreme">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Top 1000 PC Games | Free Download">
+    <meta property="og:description" content="Find the top 1000 PC games with free downloads and trending titles.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://your-site.com/top-1000-pc-games">
+    <meta property="og:image" content="https://your-site.com/game-thumbnail.jpg">
+
+    <!-- Load API Key -->
+    <script src="games.js"></script>
+
+    <!-- Schema Markup -->
+    <script type="application/ld+json" id="schema-data"></script>
+</head>
+<body>
+
+    <h1>Top 1000 PC Games</h1>
+
+    <table class="game-table">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Game Name</th>
+            </tr>
+        </thead>
+        <tbody id="game-list"></tbody>
+    </table>
+
+    <div class="pagination" id="pagination"></div>
+
+    <script>
+        let urlParams = new URLSearchParams(window.location.search);
+        let currentPage = parseInt(urlParams.get("page")) || 1;
+        const gamesPerPage = 50;
+        let allGames = [];
+
+        async function fetchAllGames() {
+            document.getElementById("game-list").innerHTML = "<tr><td colspan='2'>Loading 1000 games...</td></tr>";
+
+            if (typeof config === "undefined" || !config.API_KEY) {
+                console.error("API key is missing or games.js is not loaded.");
+                return;
+            }
+
+            let apiUrl = `https://api.rawg.io/api/games?key=${config.API_KEY}&page_size=50&platforms=4`;
+
+            try {
+                allGames = [];
+                let positionCounter = 1;
+
+                for (let i = 1; i <= 20; i++) {  // Fetching 20 pages (1000 games)
+                    let response = await fetch(apiUrl + "&page=" + i);
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+                    let data = await response.json();
+                    if (!data.results) throw new Error("No game data found");
+
+                    data.results.forEach(game => {
+                        allGames.push({ 
+                            position: positionCounter, 
+                            name: game.name, 
+                            url: "https://www.google.com/search?q=" + encodeURIComponent(game.name + " free download") 
+                        });
+                        positionCounter++;
+                    });
+
+                    console.log(`Loaded ${allGames.length} games so far...`);
+                }
+
+                displayGames();
+                createPagination();
+                generateSchemaMarkup();
+            } catch (error) {
+                console.error("Game Fetch Error:", error);
+                document.getElementById("game-list").innerHTML = "<tr><td colspan='2'>Failed to load games. Please check your API key and network connection.</td></tr>";
+            }
+        }
+
+        function displayGames() {
+            let start = (currentPage - 1) * gamesPerPage;
+            let end = start + gamesPerPage;
+            let paginatedGames = allGames.slice(start, end);
+
+            document.getElementById("game-list").innerHTML = paginatedGames.map(game =>
+                `<tr><td>${game.position}</td><td>${game.name}</td></tr>`
+            ).join("");
+
+            updateMetaTags(paginatedGames);
+            generateSchemaMarkup();
+        }
+
+        function createPagination() {
+            let totalPages = Math.ceil(allGames.length / gamesPerPage);
+            document.getElementById("pagination").innerHTML =
+                Array.from({ length: totalPages }, (_, i) => `<a href="?page=${i + 1}">${i + 1}</a>`).join(" | ");
+        }
+
+        function generateSchemaMarkup() {
+            let paginatedGames = allGames.slice((currentPage - 1) * gamesPerPage, currentPage * gamesPerPage);
+
+            let schemaData = {
+                "@context": "https://schema.org",
+                "@type": "ItemList",
+                "name": `Top 1000 PC Games - Page ${currentPage}`,
+                "itemListElement": paginatedGames.map((game, index) => ({
+                    "@type": "ListItem",
+                    "position": (currentPage - 1) * gamesPerPage + index + 1,
+                    "name": game.name,
+                    "url": game.url
+                }))
+            };
+
+            document.getElementById("schema-data").textContent = JSON.stringify(schemaData, null, 2);
+        }
+
+        function updateMetaTags(games) {
+            let metaKeywords = games.map(game => game.name + " free download").join(", ");
+            document.querySelector("meta[name='keywords']").setAttribute("content", metaKeywords);
+            document.querySelector("meta[name='description']").setAttribute("content", `Page ${currentPage}: Find free downloads for the top 50 PC games.`);
+        }
+
+        fetchAllGames();
+    </script>
+
+</body>
+</html>
