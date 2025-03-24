@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top 1000 PC Games | Free Download</title>
 
-    <!-- SEO Meta Tags -->
-    <meta name="description" content="Download the best 1000 PC games for free! Get trending RPGs, battle royale, and strategy games.">
-    <meta name="keywords" content="best PC games, free game download, trending games, RPG games, strategy games, battle royale, multiplayer, FPS games">
+    <!-- Default SEO Meta Tags (Updated Dynamically) -->
+    <meta name="description" content="Find and download the best 1000 PC games for free. Get trending RPGs, battle royale, and strategy games.">
+    <meta name="keywords" content="best PC games, free game download, RPG games, strategy games, battle royale, FPS games">
     <meta name="author" content="1337Xtreme">
     <meta name="robots" content="index, follow">
 
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Top 1000 PC Games | Free Download">
-    <meta property="og:description" content="Find the top 1000 PC games with free downloads and trending titles.">
+    <meta property="og:description" content="Find the top 1000 PC games with free downloads and official store links.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://your-site.com/top-1000-pc-games">
     <meta property="og:image" content="https://your-site.com/game-thumbnail.jpg">
@@ -23,6 +23,7 @@
 
     <!-- Schema Markup -->
     <script type="application/ld+json" id="schema-data"></script>
+
 </head>
 <body>
 
@@ -66,24 +67,44 @@
                     let data = await response.json();
                     if (!data.results) throw new Error("No game data found");
 
-                    data.results.forEach(game => {
+                    // Get individual game URLs
+                    for (let game of data.results) {
+                        let gameUrl = await getGameStoreUrl(game.id);
                         allGames.push({ 
                             position: positionCounter, 
                             name: game.name, 
-                            url: "https://www.google.com/search?q=" + encodeURIComponent(game.name + " free download") 
+                            url: gameUrl 
                         });
                         positionCounter++;
-                    });
+                    }
 
                     console.log(`Loaded ${allGames.length} games so far...`);
                 }
 
                 displayGames();
                 createPagination();
-                generateSchemaMarkup();
+                updateSchemaMarkup();
             } catch (error) {
                 console.error("Game Fetch Error:", error);
                 document.getElementById("game-list").innerHTML = "<tr><td colspan='2'>Failed to load games. Please check your API key and network connection.</td></tr>";
+            }
+        }
+
+        async function getGameStoreUrl(gameId) {
+            let gameDetailsUrl = `https://api.rawg.io/api/games/${gameId}?key=${config.API_KEY}`;
+            try {
+                let response = await fetch(gameDetailsUrl);
+                if (!response.ok) throw new Error(`Error fetching game details: ${response.status}`);
+                let gameData = await response.json();
+                
+                if (gameData.stores && gameData.stores.length > 0) {
+                    return gameData.stores[0].url;  // Return the first available store link
+                } else {
+                    return `https://www.google.com/search?q=${encodeURIComponent(gameData.name + " free download")}`;  // Fallback to Google
+                }
+            } catch (error) {
+                console.error(`Error fetching store URL for game ID ${gameId}:`, error);
+                return `https://www.google.com/search?q=${encodeURIComponent(gameData.name + " free download")}`;  // Fallback URL
             }
         }
 
@@ -93,11 +114,11 @@
             let paginatedGames = allGames.slice(start, end);
 
             document.getElementById("game-list").innerHTML = paginatedGames.map(game =>
-                `<tr><td>${game.position}</td><td>${game.name}</td></tr>`
+                `<tr><td>${game.position}</td><td><a href="${game.url}" target="_blank">${game.name}</a></td></tr>`
             ).join("");
 
             updateMetaTags(paginatedGames);
-            generateSchemaMarkup();
+            updateSchemaMarkup();
         }
 
         function createPagination() {
@@ -106,7 +127,7 @@
                 Array.from({ length: totalPages }, (_, i) => `<a href="?page=${i + 1}">${i + 1}</a>`).join(" | ");
         }
 
-        function generateSchemaMarkup() {
+        function updateSchemaMarkup() {
             let paginatedGames = allGames.slice((currentPage - 1) * gamesPerPage, currentPage * gamesPerPage);
 
             let schemaData = {
@@ -125,9 +146,12 @@
         }
 
         function updateMetaTags(games) {
+            let firstGameName = games.length > 0 ? games[0].name : "Best PC Games";
+            document.title = firstGameName + " Free Download | Top PC Games";
+
             let metaKeywords = games.map(game => game.name + " free download").join(", ");
             document.querySelector("meta[name='keywords']").setAttribute("content", metaKeywords);
-            document.querySelector("meta[name='description']").setAttribute("content", `Page ${currentPage}: Find free downloads for the top 50 PC games.`);
+            document.querySelector("meta[name='description']").setAttribute("content", `Find and download ${firstGameName} for free. Explore the best PC games available now!`);
         }
 
         fetchAllGames();
