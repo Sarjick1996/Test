@@ -45,6 +45,7 @@
         let currentPage = parseInt(urlParams.get("page")) || 1;
         const gamesPerPage = 50;
         let allGames = [];
+        let isLoading = false;
 
         async function fetchGames(pageNumber = 1) {
             let apiUrl = `https://api.rawg.io/api/games?key=${config.API_KEY}&page_size=50&page=${pageNumber}&platforms=4`;
@@ -55,18 +56,44 @@
                 let data = await response.json();
                 if (!data.results) throw new Error("No game data found.");
 
-                return data.results.map((game, index) => ({
-                    position: (pageNumber - 1) * 50 + index + 1,
-                    name: game.name,
-                    url: `https://www.google.com/search?q=${encodeURIComponent(game.name + " free download")}` // Faster: No extra API call
-                }));
+                // Fetch game store URLs
+                let gameList = [];
+                for (let game of data.results) {
+                    let storeUrl = await getGameStoreUrl(game.id);
+                    gameList.push({
+                        position: (pageNumber - 1) * 50 + gameList.length + 1,
+                        name: game.name,
+                        url: storeUrl
+                    });
+                }
+                return gameList;
             } catch (error) {
                 console.error("❌ Game Fetch Error:", error);
                 return [];
             }
         }
 
+        async function getGameStoreUrl(gameId) {
+            let gameDetailsUrl = `https://api.rawg.io/api/games/${gameId}?key=${config.API_KEY}`;
+            try {
+                let response = await fetch(gameDetailsUrl);
+                if (!response.ok) throw new Error(`Error fetching game details: ${response.status}`);
+                let gameData = await response.json();
+
+                if (gameData.stores && gameData.stores.length > 0) {
+                    return gameData.stores[0].url; // ✅ Link to real store (Steam, Epic, etc.)
+                } else {
+                    return `https://store.steampowered.com/`; // ✅ Generic fallback, NOT Google
+                }
+            } catch (error) {
+                console.error(`Error fetching store URL for game ID ${gameId}:`, error);
+                return `https://store.steampowered.com/`;
+            }
+        }
+
         async function fetchAllGames() {
+            if (isLoading) return;
+            isLoading = true;
             document.getElementById("game-list").innerHTML = "<tr><td colspan='2'>Loading games...</td></tr>";
 
             if (typeof config === "undefined" || !config.API_KEY) {
@@ -74,20 +101,21 @@
                 return;
             }
 
-            // ✅ Load first 50 games instantly
-            allGames = await fetchGames(1);
+            allGames = await fetchGames(1); // ✅ Load first 50 games instantly
             displayGames();
             createPagination();
             injectStaticSchema();
 
-            // ✅ Fetch remaining games in the background (without blocking display)
             for (let i = 2; i <= 20; i++) {
                 let moreGames = await fetchGames(i);
                 allGames = allGames.concat(moreGames);
+                console.log(`✅ Loaded ${allGames.length} games so far`);
             }
 
-            console.log("✅ All Games Loaded:", allGames.length);
-            injectStaticSchema(); // ✅ Update Schema once all games load
+            isLoading = false;
+            injectStaticSchema();
+            displayGames();
+            createPagination();
         }
 
         function displayGames() {
