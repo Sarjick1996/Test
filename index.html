@@ -168,34 +168,20 @@
                 }))
             };
 
-            let schemaScript = `<script type="application/ld+json">${JSON.stringify(schemaData, null, 2)}</script>
+            let schemaScript = document.createElement("script");
+            schemaScript.type = "application/ld+json";
+            schemaScript.textContent = JSON.stringify(schemaData, null, 2);
 
-           function injectStaticSchema() {
-    let schemaData = {
-        "@context": "https://schema.org",
-        "@type": "ItemList",
-        "name": "Top 1000 PC Games",
-        "itemListElement": allGames.map((game, index) => ({
-            "@type": "ListItem",
-            "position": index + 1,
-            "name": game.name,
-            "url": game.url
-        }))
-    };
+            let schemaContainer = document.getElementById("schema-data");
+            if (schemaContainer) {
+                schemaContainer.remove();
+            }
 
-    let schemaScript = document.createElement("script");
-    schemaScript.type = "application/ld+json";
-    schemaScript.textContent = JSON.stringify(schemaData, null, 2);
+            document.head.appendChild(schemaScript);
 
-    let schemaContainer = document.getElementById("schema-data");
-    if (schemaContainer) {
-        schemaContainer.remove(); // ✅ Removes old schema if exists
-    }
+            console.log("✅ Schema Injected:", schemaData);
+        }
 
-    document.head.appendChild(schemaScript); // ✅ Injects correct schema
-
-    console.log("✅ Schema Injected:", schemaData);
-}
         fetchAllGames();
     </script>
 
