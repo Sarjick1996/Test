@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top 1000 PC Games | Free Download</title>
 
-    <!-- Default SEO Meta Tags (Updated Per Game) -->
-    <meta name="description" content="Find and download the best 1000 PC games for free. Get trending RPGs, battle royale, and strategy games.">
+    <!-- Default SEO Meta Tags (Updated Dynamically) -->
+    <meta name="description" content="Find and download the best 1000 PC games. Get trending RPGs, battle royale, and strategy games.">
     <meta name="keywords" content="best PC games, free game download, RPG games, strategy games, battle royale, FPS games">
     <meta name="author" content="1337Xtreme">
     <meta name="robots" content="index, follow">
 
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Top 1000 PC Games | Free Download">
-    <meta property="og:description" content="Find the top 1000 PC games with free downloads and official store links.">
+    <meta property="og:description" content="Find the top 1000 PC games with official store links.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://your-site.com/top-1000-pc-games">
     <meta property="og:image" content="https://your-site.com/game-thumbnail.jpg">
@@ -89,7 +89,6 @@
 
                 displayGames();
                 createPagination();
-                updateMetaTags();
                 injectStaticSchema();
             } catch (error) {
                 console.error("❌ Game Fetch Error:", error);
@@ -129,7 +128,9 @@
                 `<tr><td>${game.position}</td><td><a href="${game.url}" target="_blank">${game.name}</a></td></tr>`
             ).join("");
 
-            updateMetaTags();
+            console.log("✅ Displaying Games:", paginatedGames.length);
+
+            updateMetaTags(paginatedGames);
         }
 
         function createPagination() {
@@ -138,20 +139,20 @@
                 Array.from({ length: totalPages }, (_, i) => `<a href="?page=${i + 1}">${i + 1}</a>`).join(" | ");
         }
 
-        function updateMetaTags() {
-            if (allGames.length === 0) return;
+        function updateMetaTags(games) {
+            if (games.length === 0) return;
 
-            let paginatedGames = allGames.slice((currentPage - 1) * gamesPerPage, currentPage * gamesPerPage);
-            let firstGameName = paginatedGames.length > 0 ? paginatedGames[0].name : "Best PC Games";
-            document.title = `${firstGameName} Free Download | Top PC Games`;
+            let firstGameName = games[0].name;
+            let pageTitle = `${firstGameName} Free Download | Top PC Games`;
+            document.title = pageTitle;
 
-            let metaDescription = `Find and download ${firstGameName} for free. Explore the best PC games available now!`;
-            let metaKeywords = paginatedGames.map(game => game.name + " free download").join(", ");
+            let metaDescription = `Download ${firstGameName} for free! Explore the best trending PC games available now.`;
+            let metaKeywords = games.map(game => game.name + " free download").join(", ");
 
             document.querySelector("meta[name='description']").setAttribute("content", metaDescription);
             document.querySelector("meta[name='keywords']").setAttribute("content", metaKeywords);
 
-            console.log("✅ Meta Tags Updated:", { title: document.title, description: metaDescription, keywords: metaKeywords });
+            console.log("✅ Meta tags updated:", { title: pageTitle, description: metaDescription, keywords: metaKeywords });
         }
 
         function injectStaticSchema() {
