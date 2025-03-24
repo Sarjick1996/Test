@@ -170,13 +170,32 @@
 
             let schemaScript = `<script type="application/ld+json">${JSON.stringify(schemaData, null, 2)}</script>;
 
-            let schemaContainer = document.getElementById("schema-data");
-            schemaContainer.remove();
-            document.head.insertAdjacentHTML("beforeend", schemaScript);
+           function injectStaticSchema() {
+    let schemaData = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Top 1000 PC Games",
+        "itemListElement": allGames.map((game, index) => ({
+            "@type": "ListItem",
+            "position": index + 1,
+            "name": game.name,
+            "url": game.url
+        }))
+    };
 
-            console.log("✅ Schema Injected:", schemaData);
-        }
+    let schemaScript = document.createElement("script");
+    schemaScript.type = "application/ld+json";
+    schemaScript.textContent = JSON.stringify(schemaData, null, 2);
 
+    let schemaContainer = document.getElementById("schema-data");
+    if (schemaContainer) {
+        schemaContainer.remove(); // ✅ Removes old schema if exists
+    }
+
+    document.head.appendChild(schemaScript); // ✅ Injects correct schema
+
+    console.log("✅ Schema Injected:", schemaData);
+}
         fetchAllGames();
     </script>
 
