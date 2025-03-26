@@ -3,184 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top 1000 PC Games | Free Download</title>
-
-    <!-- Default SEO Meta Tags -->
-    <meta name="description" content="Find and download the best 1000 PC games. Get trending RPGs, battle royale, and strategy games.">
-    <meta name="keywords" content="best PC games, free game download, RPG games, strategy games, battle royale, FPS games">
-    <meta name="author" content="1337Xtreme">
-    <meta name="robots" content="index, follow">
-
-    <!-- Load API Key -->
-    <script src="games.js"></script>
-
-    <!-- Schema Markup Placeholder -->
-    <script type="application/ld+json" id="schema-data"></script>
-
+    <title>Top Games List - Play & Download</title>
+    <meta name="description" content="Discover the best free games to play online or download. Explore top-rated games from various genres!">
+    <meta name="keywords" content="free games, play online, download games, best adventure games, top PC games">
+    
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #gameList { list-style: none; padding: 0; }
+        #gameList li { margin: 10px 0; font-size: 18px; }
+        #gameList a { text-decoration: none; color: blue; }
+        .pagination { margin-top: 20px; }
+        .page-btn { padding: 8px 12px; margin: 5px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 4px; }
+    </style>
+    
+    <!-- Schema.org JSON-LD Placeholder -->
+    <script id="game-schema" type="application/ld+json"></script>
 </head>
 <body>
-
-    <h1>Top 1000 PC Games</h1>
-
-    <table class="game-table">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Game Name</th>
-            </tr>
-        </thead>
-        <tbody id="game-list"></tbody>
-    </table>
-
+    <h1>Top Games List</h1>
+    <ul id="gameList"></ul>
     <div class="pagination" id="pagination"></div>
 
+    <script src="games.js"></script>
     <script>
-        let urlParams = new URLSearchParams(window.location.search);
-        let currentPage = parseInt(urlParams.get("page")) || 1;
         const gamesPerPage = 50;
-        let allGames = new Map(); // Use a Map to prevent duplicate games
-        let isLoading = false;
+        let currentPage = 1;
 
-        async function fetchGames(pageNumber = 1) {
-            let apiUrl = `https://api.rawg.io/api/games?key=${config.API_KEY}&page_size=50&page=${pageNumber}&platforms=4`;
+        function generateMetaTags() {
+            const head = document.head;
+            gamesData.games.forEach((game, index) => {
+                const metaTags = [
+                    { name: `game-download-${index + 1}`, content: `${game.name} Free Download` },
+                    { name: `game-play-${index + 1}`, content: `Play ${game.name} Online` },
+                    { name: `game-category-${index + 1}`, content: `Best ${game.name} Game` }
+                ];
 
-            try {
-                let response = await fetch(apiUrl);
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                let data = await response.json();
-                if (!data.results) throw new Error("No game data found.");
-
-                return data.results.map((game, index) => ({
-                    position: (pageNumber - 1) * 50 + index + 1,
-                    name: game.name,
-                    url: "", // URLs will be fetched later
-                    id: game.id
-                }));
-            } catch (error) {
-                console.error("❌ Game Fetch Error:", error);
-                return [];
-            }
+                metaTags.forEach(tag => {
+                    const metaElement = document.createElement("meta");
+                    metaElement.name = tag.name;
+                    metaElement.content = tag.content;
+                    head.appendChild(metaElement);
+                });
+            });
         }
 
-        async function fetchAllGames() {
-            if (isLoading) return;
-            isLoading = true;
-            document.getElementById("game-list").innerHTML = "<tr><td colspan='2'>Loading games...</td></tr>";
+        function generateGameSchema() {
+            const schemaScript = document.getElementById("game-schema");
+            const games = gamesData.games.map(game => ({
+                "@context": "https://schema.org",
+                "@type": "VideoGame",
+                "name": game.name,
+                "url": game.url,
+                "applicationCategory": "Game",
+                "operatingSystem": "Windows, macOS, PlayStation, Xbox, Switch",
+                "author": {
+                    "@type": "Organization",
+                    "name": "Top Games List"
+                },
+                "aggregateRating": {
+                    "@type": "AggregateRating",
+                    "ratingValue": "4.5",
+                    "reviewCount": "1000"
+                }
+            }));
 
-            if (typeof config === "undefined" || !config.API_KEY) {
-                console.error("❌ API key is missing or games.js is not loaded.");
-                return;
-            }
-
-            for (let i = 1; i <= 20; i++) {
-                let moreGames = await fetchGames(i);
-                moreGames.forEach(game => allGames.set(game.id, game)); // Store unique games using their ID
-                displayGames();
-                createPagination();
-                console.log(`✅ Loaded ${allGames.size} unique games so far`);
-            }
-
-            isLoading = false;
-            injectSchemaMarkup();
-            fetchGameStoreUrls();
+            schemaScript.textContent = JSON.stringify(games, null, 2);
         }
 
-        async function fetchGameStoreUrls() {
-            console.log("🔄 Fetching store URLs...");
-            let gameBatches = Array.from(allGames.values()).map(game => getGameStoreUrl(game.id, game.name));
-            let urls = await Promise.all(gameBatches);
+        function displayGames(page) {
+            const gameList = document.getElementById("gameList");
+            const pagination = document.getElementById("pagination");
+            gameList.innerHTML = "";
+            pagination.innerHTML = "";
 
-            let index = 0;
-            allGames.forEach(game => {
-                game.url = urls[index++]; // ✅ Update game URLs
+            const start = (page - 1) * gamesPerPage;
+            const end = start + gamesPerPage;
+            const paginatedGames = gamesData.games.slice(start, end);
+
+            paginatedGames.forEach(game => {
+                const listItem = document.createElement("li");
+                const gameLink = document.createElement("a");
+                gameLink.href = game.url;
+                gameLink.textContent = game.name;
+                gameLink.target = "_blank";
+                listItem.appendChild(gameLink);
+                gameList.appendChild(listItem);
             });
 
-            console.log("✅ Store URLs Loaded!");
-            displayGames();
-            injectSchemaMarkup();
-        }
-
-        async function getGameStoreUrl(gameId, gameName) {
-            let gameDetailsUrl = `https://api.rawg.io/api/games/${gameId}?key=${config.API_KEY}`;
-            try {
-                let response = await fetch(gameDetailsUrl);
-                if (!response.ok) throw new Error(`Error fetching game details: ${response.status}`);
-                let gameData = await response.json();
-
-                if (gameData.stores && gameData.stores.length > 0) {
-                    return gameData.stores[0].url; // ✅ Link to store (Steam, Epic, etc.)
-                } else {
-                    return `https://rawg.io/games/${gameId}`; // ✅ Link to RAWG game page instead of IGN
-                }
-            } catch (error) {
-                console.error(`Error fetching store URL for game ID ${gameId}:`, error);
-                return `https://rawg.io/games/${gameId}`;
+            const totalPages = Math.ceil(gamesData.games.length / gamesPerPage);
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement("button");
+                btn.textContent = i;
+                btn.classList.add("page-btn");
+                btn.onclick = () => {
+                    currentPage = i;
+                    displayGames(i);
+                };
+                if (i === page) btn.style.background = "#0056b3";
+                pagination.appendChild(btn);
             }
         }
 
-        function displayGames() {
-            let start = (currentPage - 1) * gamesPerPage;
-            let end = start + gamesPerPage;
-            let paginatedGames = Array.from(allGames.values()).slice(start, end);
-
-            document.getElementById("game-list").innerHTML = paginatedGames.map(game =>
-                `<tr><td>${game.position}</td><td><a href="${game.url}" target="_blank">${game.name}</a></td></tr>`
-            ).join("");
-
-            updateMetaTags(paginatedGames);
-        }
-
-        function createPagination() {
-            let totalPages = Math.ceil(allGames.size / gamesPerPage);
-            document.getElementById("pagination").innerHTML =
-                Array.from({ length: totalPages }, (_, i) => `<a href="?page=${i + 1}">${i + 1}</a>`).join(" | ");
-        }
-
-        function updateMetaTags(games) {
-            if (games.length === 0) return;
-
-            let firstGameName = games[0].name;
-            let pageTitle = `${firstGameName} Free Download | Top PC Games`;
-            document.title = pageTitle;
-
-            let metaDescription = `Download ${firstGameName} for free! Explore the best trending PC games available now.`;
-            let metaKeywords = games.map(game => game.name + " free download").join(", ");
-
-            document.querySelector("meta[name='description']").setAttribute("content", metaDescription);
-            document.querySelector("meta[name='keywords']").setAttribute("content", metaKeywords);
-
-            console.log("✅ Meta tags updated:", { title: pageTitle, description: metaDescription, keywords: metaKeywords });
-        }
-
-        function injectSchemaMarkup() {
-            let schemaData = {
-                "@context": "https://schema.org",
-                "@type": "ItemList",
-                "name": "Top 1000 PC Games",
-                "itemListElement": Array.from(allGames.values()).map((game, index) => ({
-                    "@type": "ListItem",
-                    "position": index + 1,
-                    "name": game.name,
-                    "url": game.url
-                })).filter(game => game.url) // ✅ Removes invalid URLs
-            };
-
-            let schemaScript = document.createElement("script");
-            schemaScript.type = "application/ld+json";
-            schemaScript.textContent = JSON.stringify(schemaData, null, 2);
-
-            let schemaContainer = document.getElementById("schema-data");
-            if (schemaContainer) {
-                schemaContainer.remove();
-            }
-
-            document.head.appendChild(schemaScript);
-
-            console.log("✅ Schema Injected:", schemaData);
-        }
-
-        fetchAllGames();
+        generateMetaTags();
+        generateGameSchema();
+        displayGames(currentPage);
     </script>
-
 </body>
 </html>
