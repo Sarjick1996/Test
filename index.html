@@ -9,7 +9,24 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: 'Merriweather', serif; background: url('games.jpg') no-repeat center center fixed; background-size: cover; color: white; }
+        body { font-family: 'Merriweather', serif; background-size: cover; color: white; }
+
+body {
+    background-image: url('gamesimage/sunwukong.webp'); /* Use WEBP */
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Keeps background static while scrolling */
+}
+
+/* Mobile-friendly settings */
+@media (max-width: 768px) {
+    body {
+        background-size: cover;
+        background-position: center;
+    }
+}
+
         .container { text-align: center; margin-top: 20px; background: rgba(0, 0, 0, 0.7); padding: 20px; border-radius: 10px; }
         .table-container { width: 90%; margin: auto; margin-top: 20px; background: rgba(255, 255, 255, 0.2); border-radius: 10px; overflow: hidden; }
         .game-table { width: 100%; border-collapse: collapse; }
@@ -174,11 +191,28 @@
     transform: scale(1.05);
 }
 
+
 </style>
     
     <!-- Schema.org JSON-LD Placeholder -->
     <script id="game-schema" type="application/ld+json"></script>
 </head>
+<body>
+<picture>
+    <source srcset="gamesimage/sunwukong.webp" type="image/webp">
+    <img src="gamesimage/sunwukong.jpg" alt="Background Image" style="
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        width: 100vw; 
+        height: 100vh; 
+        object-fit: cover; 
+        z-index: -1;
+        pointer-events: none; /* Prevents interaction issues */
+        user-select: none; /* Avoids accidental selection */
+    ">
+</picture>
+
 <a href="index.html" class="home-button">Home</a>
 
 <!-- Wrapper to properly align elements -->
