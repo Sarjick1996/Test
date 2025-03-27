@@ -261,7 +261,7 @@ body {
             const schemaScript = document.getElementById("movie-schema");
             const movies = moviesData.movies.map(movie => ({
                 "@context": "https://schema.org",
-                "@type": "Videomovie",
+                "@type": "movie",
                 "name": movie.name,
                 "url": movie.url,
                 "applicationCategory": "movie",
@@ -270,11 +270,7 @@ body {
                     "@type": "Organization",
                     "name": "Top movies List"
                 },
-                "aggregateRating": {
-                    "@type": "AggregateRating",
-                    "ratingValue": "4.5",
-                    "reviewCount": "1000"
-                }
+                
             }));
             schemaScript.textContent = JSON.stringify(movies, null, 2);
         }
