@@ -258,23 +258,27 @@ body {
         }
 
         function generatemovieSchema() {
-            const schemaScript = document.getElementById("movie-schema");
-            if (!schemaScript) return;
-
-            const movies = moviesData.movies.map(movie => ({
-                "@context": "https://schema.org",
-                "@type": "Movie",
-                "name": movie.name,
-                "url": movie.url,
-                "aggregateRating": {
-                    "@type": "AggregateRating",
-                    "ratingValue": movie.rating || "4.5", 
-                    "reviewCount": movie.reviewCount || "1000"
-                }
-            }));
-
-            schemaScript.textContent = JSON.stringify(movies, null, 2);
+    const schemaScript = document.getElementById("movie-schema");
+    const movies = moviesData.movies.map(movie => ({
+        "@context": "https://schema.org",
+        "@type": "Movie",
+        "name": movie.name,
+        "url": movie.url,
+        "image": movie.image || "default-movie-image.jpg", // Ensure a valid image
+        "dateCreated": movie.dateCreated || "2024-01-01", // Add proper date format
+        "director": {
+            "@type": "Person",
+            "name": movie.director || "Unknown Director"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": movie.ratingValue || "8.0",
+            "reviewCount": movie.reviewCount || "1000"
         }
+    }));
+
+    schemaScript.textContent = JSON.stringify(movies, null, 2);
+}
         function displaymovies(page) {
             const movieList = document.getElementById("movieList");
             const pagination = document.getElementById("pagination");
