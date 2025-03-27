@@ -261,16 +261,19 @@ body {
             const schemaScript = document.getElementById("movie-schema");
             const movies = moviesData.movies.map(movie => ({
                 "@context": "https://schema.org",
-                "@type": "movie",
+                "@type": "Videomovie",
                 "name": movie.name,
                 "url": movie.url,
                 "applicationCategory": "movie",
                 "operatingSystem": "Windows, macOS, PlayStation, Xbox, Switch",
                 "author": {
                     "@type": "Organization",
-                    "name": "Top movies List"
+                    "name": movie.name,
                 },
-                
+                "aggregateRating": {
+                    "@type": "AggregateRating",
+                  
+                }
             }));
             schemaScript.textContent = JSON.stringify(movies, null, 2);
         }
