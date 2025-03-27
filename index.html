@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top Games List - Play & Download</title>
-    <meta name="description" content="Discover the best free games to play online or download. Explore top-rated games from various genres!">
-    <meta name="keywords" content="free games, play online, download games, best adventure games, top PC games">
+    <title>Top movies List - Play & Download</title>
+    <meta name="description" content="Discover the best free movies to play online or download. Explore top-rated movies from various genres!">
+    <meta name="keywords" content="free movies, play online, download movies, best adventure movies, top PC movies">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Merriweather', serif; background-size: cover; color: white; }
 
 body {
-    background-image: url('gamesimage/sunwukong.webp'); /* Use WEBP */
+    background-image: url('moviesimage/sunwukong.webp'); /* Use WEBP */
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat;
@@ -29,11 +29,11 @@ body {
 
         .container { text-align: center; margin-top: 20px; background: rgba(0, 0, 0, 0.7); padding: 20px; border-radius: 10px; }
         .table-container { width: 90%; margin: auto; margin-top: 20px; background: rgba(255, 255, 255, 0.2); border-radius: 10px; overflow: hidden; }
-        .game-table { width: 100%; border-collapse: collapse; }
-        .game-table th, .game-table td { font-size: 1rem; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.3); text-align: left; }
-.game-table th {
+        .movie-table { width: 100%; border-collapse: collapse; }
+        .movie-table th, .movie-table td { font-size: 1rem; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.3); text-align: left; }
+.movie-table th {
     text-align: center; /* Center align text */
-    font-size: 1.3rem; /* Same as game names */
+    font-size: 1.3rem; /* Same as movie names */
     font-family: 'Poppins', sans-serif; /* Matching font */
     font-weight: bold;
     color: white;
@@ -47,8 +47,8 @@ body {
         -1px  1px 0 black,  
          1px  1px 0 black; /* Creates black outline */
 }
-.game-table td:first-child { 
-    text-align: center;  /* Center game names */
+.movie-table td:first-child { 
+    text-align: center;  /* Center movie names */
     font-size: 1.3rem;  /* Slightly larger font */
     font-family: 'Poppins', sans-serif;  /* Stylish font */
     font-weight: bold;  
@@ -163,12 +163,12 @@ body {
     margin-top: 50px; /* Smaller space below the Home button */
 }
 
-/* Reduces space above the game table */
+/* Reduces space above the movie table */
 .table-container {
     margin-top: 20px; /* Keeps a clean layout without too much gap */
 }
 
-.game-table a {
+.movie-table a {
     display: inline-block;
     padding: 8px 12px;
     font-size: 1rem;
@@ -184,7 +184,7 @@ body {
     transition: all 0.3s ease-in-out;
 }
 
-.game-table a:hover {
+.movie-table a:hover {
     background: rgba(0, 123, 255, 0.5); /* Darker blue on hover */
     border-color: rgba(0, 123, 255, 1);
     box-shadow: 0px 6px 12px rgba(0, 123, 255, 0.8); /* Stronger glow */
@@ -195,12 +195,12 @@ body {
 </style>
     
     <!-- Schema.org JSON-LD Placeholder -->
-    <script id="game-schema" type="application/ld+json"></script>
+    <script id="movie-schema" type="application/ld+json"></script>
 </head>
 <body>
 <picture>
-    <source srcset="gamesimage/sunwukong.webp" type="image/webp">
-    <img src="gamesimage/sunwukong.jpg" alt="Background Image" style="
+    <source srcset="moviesimage/sunwukong.webp" type="image/webp">
+    <img src="moviesimage/sunwukong.jpg" alt="Background Image" style="
         position: fixed; 
         top: 0; 
         left: 0; 
@@ -218,35 +218,35 @@ body {
 <!-- Wrapper to properly align elements -->
 <div class="search-wrapper">
     <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search games..." onkeyup="searchGames()">
-        <button onclick="searchGames()">Search</button>
+        <input type="text" id="searchInput" placeholder="Search movies..." onkeyup="searchmovies()">
+        <button onclick="searchmovies()">Search</button>
     </div>
-</div>    <h1 class="premium-heading">Top 1000 Games Worldwide</h1>
+</div>    <h1 class="premium-heading">Top 1000 movies Worldwide</h1>
     <div class="table-container">
-        <table class="game-table">
+        <table class="movie-table">
             <thead>
                 <tr>
-                    <th>Game Name</th>
+                    <th>movie Name</th>
                     <th>Link</th>
                 </tr>
             </thead>
-            <tbody id="gameList"></tbody>
+            <tbody id="movieList"></tbody>
         </table>
     </div>
     <div class="pagination" id="pagination"></div>
 
-    <script src="games.js"></script>
+    <script src="movie.js"></script>
     <script>
-        const gamesPerPage = 50;
+        const moviesPerPage = 50;
         let currentPage = 1;
 
         function generateMetaTags() {
             const head = document.head;
-            gamesData.games.forEach((game, index) => {
+            moviesData.movies.forEach((movie, index) => {
                 const metaTags = [
-                    { name: `game-download-${index + 1}`, content: `${game.name} Free Download` },
-                    { name: `game-play-${index + 1}`, content: `Play ${game.name} Online` },
-                    { name: `game-category-${index + 1}`, content: `Best ${game.name} Game` }
+                    { name: `movie-download-${index + 1}`, content: `${movie.name} Free Download` },
+                    { name: `movie-play-${index + 1}`, content: `Play ${movie.name} Online` },
+                    { name: `movie-category-${index + 1}`, content: `Best ${movie.name} movie` }
                 ];
                 metaTags.forEach(tag => {
                     const metaElement = document.createElement("meta");
@@ -257,18 +257,18 @@ body {
             });
         }
 
-        function generateGameSchema() {
-            const schemaScript = document.getElementById("game-schema");
-            const games = gamesData.games.map(game => ({
+        function generatemovieSchema() {
+            const schemaScript = document.getElementById("movie-schema");
+            const movies = moviesData.movies.map(movie => ({
                 "@context": "https://schema.org",
-                "@type": "VideoGame",
-                "name": game.name,
-                "url": game.url,
-                "applicationCategory": "Game",
+                "@type": "Videomovie",
+                "name": movie.name,
+                "url": movie.url,
+                "applicationCategory": "movie",
                 "operatingSystem": "Windows, macOS, PlayStation, Xbox, Switch",
                 "author": {
                     "@type": "Organization",
-                    "name": "Top Games List"
+                    "name": "Top movies List"
                 },
                 "aggregateRating": {
                     "@type": "AggregateRating",
@@ -276,40 +276,40 @@ body {
                     "reviewCount": "1000"
                 }
             }));
-            schemaScript.textContent = JSON.stringify(games, null, 2);
+            schemaScript.textContent = JSON.stringify(movies, null, 2);
         }
 
-        function displayGames(page) {
-            const gameList = document.getElementById("gameList");
+        function displaymovies(page) {
+            const movieList = document.getElementById("movieList");
             const pagination = document.getElementById("pagination");
-            gameList.innerHTML = "";
+            movieList.innerHTML = "";
             pagination.innerHTML = "";
-            const start = (page - 1) * gamesPerPage;
-            const end = start + gamesPerPage;
-            const paginatedGames = gamesData.games.slice(start, end);
-            paginatedGames.forEach(game => {
+            const start = (page - 1) * moviesPerPage;
+            const end = start + moviesPerPage;
+            const paginatedmovies = moviesData.movies.slice(start, end);
+            paginatedmovies.forEach(movie => {
                 const row = document.createElement("tr");
                 const nameCell = document.createElement("td");
-                nameCell.textContent = game.name;
+                nameCell.textContent = movie.name;
                 const linkCell = document.createElement("td");
-                const gameLink = document.createElement("a");
-                gameLink.href = game.url;
-                gameLink.textContent = "See More";
-                gameLink.target = "_blank";
-                gameLink.style.color = "white";
-                linkCell.appendChild(gameLink);
+                const movieLink = document.createElement("a");
+                movieLink.href = movie.url;
+                movieLink.textContent = "See More";
+                movieLink.target = "_blank";
+                movieLink.style.color = "white";
+                linkCell.appendChild(movieLink);
                 row.appendChild(nameCell);
                 row.appendChild(linkCell);
-                gameList.appendChild(row);
+                movieList.appendChild(row);
             });
-            const totalPages = Math.ceil(gamesData.games.length / gamesPerPage);
+            const totalPages = Math.ceil(moviesData.movies.length / moviesPerPage);
             for (let i = 1; i <= totalPages; i++) {
                 const btn = document.createElement("button");
                 btn.textContent = i;
                 btn.classList.add("page-btn");
                 btn.onclick = () => {
                     currentPage = i;
-                    displayGames(i);
+                    displaymovies(i);
                 };
                 if (i === page) btn.style.background = "#0056b3";
                 pagination.appendChild(btn);
@@ -317,38 +317,38 @@ body {
         }
 
         generateMetaTags();
-        generateGameSchema();
-        displayGames(currentPage);
+        generatemovieSchema();
+        displaymovies(currentPage);
     </script>
 <script>
-    function searchGames() {
+    function searchmovies() {
         let input = document.getElementById("searchInput").value.toLowerCase();
-        let gameList = document.getElementById("gameList");
+        let movieList = document.getElementById("movieList");
 
-        if (!gameList) return; // If no game list, exit function
+        if (!movieList) return; // If no movie list, exit function
 
-        gameList.innerHTML = ""; // Clear current list
+        movieList.innerHTML = ""; // Clear current list
 
-        gamesData.games.forEach(game => {
-            if (game.name.toLowerCase().includes(input)) {
+        moviesData.movies.forEach(movie => {
+            if (movie.name.toLowerCase().includes(input)) {
                 let row = document.createElement("tr");
                 let nameCell = document.createElement("td");
-                nameCell.textContent = game.name;
+                nameCell.textContent = movie.name;
                 let linkCell = document.createElement("td");
-                let gameLink = document.createElement("a");
-                gameLink.href = game.url;
-                gameLink.textContent = "See More";
-                gameLink.target = "_blank";
-                gameLink.style.color = "white";
-                linkCell.appendChild(gameLink);
+                let movieLink = document.createElement("a");
+                movieLink.href = movie.url;
+                movieLink.textContent = "See More";
+                movieLink.target = "_blank";
+                movieLink.style.color = "white";
+                linkCell.appendChild(movieLink);
                 row.appendChild(nameCell);
                 row.appendChild(linkCell);
-                gameList.appendChild(row);
+                movieList.appendChild(row);
             }
         });
 
-        if (gameList.innerHTML === "") {
-            gameList.innerHTML = "<tr><td colspan='2' style='text-align: center;'>No games found</td></tr>";
+        if (movieList.innerHTML === "") {
+            movieList.innerHTML = "<tr><td colspan='2' style='text-align: center;'>No movies found</td></tr>";
         }
     }
 </script>
