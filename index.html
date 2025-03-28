@@ -236,80 +236,7 @@ body {
     <div class="pagination" id="pagination"></div>
 
     <script src="tvshow.js"></script>
-    <script>
-        const tvshowsPerPage = 50;
-        let currentPage = 1;
-
-        function generateMetaTags() {
-            const head = document.head;
-            tvshowsData.tvshows.forEach((tvshow, index) => {
-                const metaTags = [
-                    { name: `tvshow-download-${index + 1}`, content: `${tvshow.name} Free Download` },
-                    { name: `tvshow-play-${index + 1}`, content: `Watch ${tvshow.name} Online,Streaming, Full HD, Free tvshows` },
-                    { name: `tvshow-category-${index + 1}`, content: `Best ${tvshow.name} tvshow full HD` }
-                ];
-                metaTags.forEach(tag => {
-                    const metaElement = document.createElement("meta");
-                    metaElement.name = tag.name;
-                    metaElement.content = tag.content;
-                    head.appendChild(metaElement);
-                });
-            });
-        }
-
-        function generatetvshowSchema() {
-    const schemaScript = document.getElementById("tvshow-schema");
-    const tvshows = tvshowsData.tvshows.map(tvshow => ({
-        "@context": "https://schema.org",
-        "@type": "TVShow",
-        "name": tvshow.name,
-        "url": tvshow.url
-    })); 
-
-    schemaScript.textContent = JSON.stringify(tvshows, null, 2);
-}
-        function displaytvshows(page) {
-            const tvshowList = document.getElementById("tvshowList");
-            const pagination = document.getElementById("pagination");
-            tvshowList.innerHTML = "";
-            pagination.innerHTML = "";
-            const start = (page - 1) * tvshowsPerPage;
-            const end = start + tvshowsPerPage;
-            const paginatedtvshows = tvshowsData.tvshows.slice(start, end);
-            paginatedtvshows.forEach(tvshow => {
-                const row = document.createElement("tr");
-                const nameCell = document.createElement("td");
-                nameCell.textContent = tvshow.name;
-                const linkCell = document.createElement("td");
-                const tvshowLink = document.createElement("a");
-                tvshowLink.href = tvshow.url;
-                tvshowLink.textContent = "See More";
-                tvshowLink.target = "_blank";
-                tvshowLink.style.color = "white";
-                linkCell.appendChild(tvshowLink);
-                row.appendChild(nameCell);
-                row.appendChild(linkCell);
-                tvshowList.appendChild(row);
-            });
-            const totalPages = Math.ceil(tvshowsData.tvshows.length / tvshowsPerPage);
-            for (let i = 1; i <= totalPages; i++) {
-                const btn = document.createElement("button");
-                btn.textContent = i;
-                btn.classList.add("page-btn");
-                btn.onclick = () => {
-                    currentPage = i;
-                    displaytvshows(i);
-                };
-                if (i === page) btn.style.background = "#0056b3";
-                pagination.appendChild(btn);
-            }
-        }
-       
-        displaytvshows(currentPage);
-        generateMetaTags();
-        generatetvshowSchema();
-       
-    </script>
+  
 <script>
     function searchtvshows() {
         let input = document.getElementById("searchInput").value.toLowerCase();
@@ -341,6 +268,80 @@ body {
             tvshowList.innerHTML = "<tr><td colspan='2' style='text-align: center;'>No tvshows found</td></tr>";
         }
     }
+</script>
+<script>
+    const tvshowsPerPage = 50;
+    let currentPage = 1;
+
+    function generateMetaTags() {
+        const head = document.head;
+        tvshowsData.tvshows.forEach((tvshow, index) => {
+            const metaTags = [
+                { name: `tvshow-download-${index + 1}`, content: `${tvshow.name} Free Download` },
+                { name: `tvshow-play-${index + 1}`, content: `Watch ${tvshow.name} Online,Streaming, Full HD, Free tvshows` },
+                { name: `tvshow-category-${index + 1}`, content: `Best ${tvshow.name} tvshow full HD` }
+            ];
+            metaTags.forEach(tag => {
+                const metaElement = document.createElement("meta");
+                metaElement.name = tag.name;
+                metaElement.content = tag.content;
+                head.appendChild(metaElement);
+            });
+        });
+    }
+
+    function generatetvshowSchema() {
+const schemaScript = document.getElementById("tvshow-schema");
+const tvshows = tvshowsData.tvshows.map(tvshow => ({
+    "@context": "https://schema.org",
+    "@type": "TVShow",
+    "name": tvshow.name,
+    "url": tvshow.url
+})); 
+
+schemaScript.textContent = JSON.stringify(tvshows, null, 2);
+}
+    function displaytvshows(page) {
+        const tvshowList = document.getElementById("tvshowList");
+        const pagination = document.getElementById("pagination");
+        tvshowList.innerHTML = "";
+        pagination.innerHTML = "";
+        const start = (page - 1) * tvshowsPerPage;
+        const end = start + tvshowsPerPage;
+        const paginatedtvshows = tvshowsData.tvshows.slice(start, end);
+        paginatedtvshows.forEach(tvshow => {
+            const row = document.createElement("tr");
+            const nameCell = document.createElement("td");
+            nameCell.textContent = tvshow.name;
+            const linkCell = document.createElement("td");
+            const tvshowLink = document.createElement("a");
+            tvshowLink.href = tvshow.url;
+            tvshowLink.textContent = "See More";
+            tvshowLink.target = "_blank";
+            tvshowLink.style.color = "white";
+            linkCell.appendChild(tvshowLink);
+            row.appendChild(nameCell);
+            row.appendChild(linkCell);
+            tvshowList.appendChild(row);
+        });
+        const totalPages = Math.ceil(tvshowsData.tvshows.length / tvshowsPerPage);
+        for (let i = 1; i <= totalPages; i++) {
+            const btn = document.createElement("button");
+            btn.textContent = i;
+            btn.classList.add("page-btn");
+            btn.onclick = () => {
+                currentPage = i;
+                displaytvshows(i);
+            };
+            if (i === page) btn.style.background = "#0056b3";
+            pagination.appendChild(btn);
+        }
+    }
+   
+    displaytvshows(currentPage);
+    generateMetaTags();
+    generatetvshowSchema();
+   
 </script>
 </body>
 </html>
