@@ -291,15 +291,35 @@ body {
     }
 
     function generatetvshowSchema() {
-const schemaScript = document.getElementById("tvshow-schema");
-const tvshows = tvshowsData.tvshows.map(tvshow => ({
-    "@context": "https://schema.org",
-    "@type": "TVShow",
-    "name": tvshow.name,
-    "url": tvshow.url
-})); 
+    const schemaScript = document.getElementById("tvshow-schema");
 
-schemaScript.textContent = JSON.stringify(tvshows, null, 2);
+    if (!tvshowsData || !tvshowsData.tvshows || tvshowsData.tvshows.length === 0) {
+        console.error("No TV show data available.");
+        return;
+    }
+
+    const tvshows = tvshowsData.tvshows.map((tvshow, index) => ({
+        "@type": "TVSeries",
+        "name": tvshow.name,
+        "url": tvshow.url
+    }));
+
+    const schemaData = {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "ItemList",
+                "name": "Top 1000 TV Shows Worldwide",
+                "itemListElement": tvshows.map((tvshow, index) => ({
+                    "@type": "ListItem",
+                    "position": index + 1,
+                    "item": tvshow
+                }))
+            }
+        ]
+    };
+
+    schemaScript.textContent = JSON.stringify(schemaData, null, 2);
 }
     function displaytvshows(page) {
         const tvshowList = document.getElementById("tvshowList");
@@ -340,7 +360,13 @@ schemaScript.textContent = JSON.stringify(tvshows, null, 2);
    
     displaytvshows(currentPage);
     generateMetaTags();
-    generatetvshowSchema();
+    document.addEventListener("DOMContentLoaded", function () {
+    if (typeof tvshowsData !== "undefined") {
+        generatetvshowSchema();
+    } else {
+        console.error("tvshow.js data not loaded.");
+    }
+});
    
 </script>
 </body>
