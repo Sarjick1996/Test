@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top movies List - Play & Download</title>
-    <meta name="description" content="Discover the best free movies to play online or download. Explore top-rated movies from various genres!">
-    <meta name="keywords" content="free movies, play online, download movies, best adventure movies, top PC movies">
+    <title>Top tvshows List - Play & Download</title>
+    <meta name="description" content="Discover the best free tvshows to play online or download. Explore top-rated tvshows from various genres!">
+    <meta name="keywords" content="free tvshows, play online, download tvshows, best adventure tvshows, top PC tvshows">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Merriweather', serif; background-size: cover; color: white; }
 
 body {
-    background-image: url('moviesimage/sunwukong.webp'); /* Use WEBP */
+    background-image: url('tvshowsimage/sunwukong.webp'); /* Use WEBP */
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat;
@@ -29,11 +29,11 @@ body {
 
         .container { text-align: center; margin-top: 20px; background: rgba(0, 0, 0, 0.7); padding: 20px; border-radius: 10px; }
         .table-container { width: 90%; margin: auto; margin-top: 20px; background: rgba(255, 255, 255, 0.2); border-radius: 10px; overflow: hidden; }
-        .movie-table { width: 100%; border-collapse: collapse; }
-        .movie-table th, .movie-table td { font-size: 1rem; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.3); text-align: left; }
-.movie-table th {
+        .tvshow-table { width: 100%; border-collapse: collapse; }
+        .tvshow-table th, .tvshow-table td { font-size: 1rem; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.3); text-align: left; }
+.tvshow-table th {
     text-align: center; /* Center align text */
-    font-size: 1.3rem; /* Same as movie names */
+    font-size: 1.3rem; /* Same as tvshow names */
     font-family: 'Poppins', sans-serif; /* Matching font */
     font-weight: bold;
     color: white;
@@ -47,8 +47,8 @@ body {
         -1px  1px 0 black,  
          1px  1px 0 black; /* Creates black outline */
 }
-.movie-table td:first-child { 
-    text-align: center;  /* Center movie names */
+.tvshow-table td:first-child { 
+    text-align: center;  /* Center tvshow names */
     font-size: 1.3rem;  /* Slightly larger font */
     font-family: 'Poppins', sans-serif;  /* Stylish font */
     font-weight: bold;  
@@ -163,12 +163,12 @@ body {
     margin-top: 50px; /* Smaller space below the Home button */
 }
 
-/* Reduces space above the movie table */
+/* Reduces space above the tvshow table */
 .table-container {
     margin-top: 20px; /* Keeps a clean layout without too much gap */
 }
 
-.movie-table a {
+.tvshow-table a {
     display: inline-block;
     padding: 8px 12px;
     font-size: 1rem;
@@ -184,7 +184,7 @@ body {
     transition: all 0.3s ease-in-out;
 }
 
-.movie-table a:hover {
+.tvshow-table a:hover {
     background: rgba(0, 123, 255, 0.5); /* Darker blue on hover */
     border-color: rgba(0, 123, 255, 1);
     box-shadow: 0px 6px 12px rgba(0, 123, 255, 0.8); /* Stronger glow */
@@ -195,12 +195,12 @@ body {
 </style>
     
     <!-- Schema.org JSON-LD Placeholder -->
-    <script id="movie-schema" type="application/ld+json"></script>
+    <script id="tvshow-schema" type="application/ld+json"></script>
 </head>
 <body>
 <picture>
-    <source srcset="moviesimage/godfather.webp" type="image/webp">
-    <img src="moviesimage/godfather.jpg" alt="Background Image" style="
+    <source srcset="tvshowsimage/godfather.webp" type="image/webp">
+    <img src="tvshowsimage/godfather.jpg" alt="Background Image" style="
         position: fixed; 
         top: 0; 
         left: 0; 
@@ -218,35 +218,35 @@ body {
 <!-- Wrapper to properly align elements -->
 <div class="search-wrapper">
     <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search movies..." onkeyup="searchmovies()">
-        <button onclick="searchmovies()">Search</button>
+        <input type="text" id="searchInput" placeholder="Search tvshows..." onkeyup="searchtvshows()">
+        <button onclick="searchtvshows()">Search</button>
     </div>
-</div>    <h1 class="premium-heading">Top 1000 movies Worldwide</h1>
+</div>    <h1 class="premium-heading">Top 1000 tvshows Worldwide</h1>
     <div class="table-container">
-        <table class="movie-table">
+        <table class="tvshow-table">
             <thead>
                 <tr>
-                    <th>movie Name</th>
+                    <th>tvshow Name</th>
                     <th>Link</th>
                 </tr>
             </thead>
-            <tbody id="movieList"></tbody>
+            <tbody id="tvshowList"></tbody>
         </table>
     </div>
     <div class="pagination" id="pagination"></div>
 
-    <script src="movie.js"></script>
+    <script src="tvshow.js"></script>
     <script>
-        const moviesPerPage = 50;
+        const tvshowsPerPage = 50;
         let currentPage = 1;
 
         function generateMetaTags() {
             const head = document.head;
-            moviesData.movies.forEach((movie, index) => {
+            tvshowsData.tvshows.forEach((tvshow, index) => {
                 const metaTags = [
-                    { name: `movie-download-${index + 1}`, content: `${movie.name} Free Download` },
-                    { name: `movie-play-${index + 1}`, content: `Watch ${movie.name} Online,Streaming, Full HD, Free Movies` },
-                    { name: `movie-category-${index + 1}`, content: `Best ${movie.name} movie full HD` }
+                    { name: `tvshow-download-${index + 1}`, content: `${tvshow.name} Free Download` },
+                    { name: `tvshow-play-${index + 1}`, content: `Watch ${tvshow.name} Online,Streaming, Full HD, Free tvshows` },
+                    { name: `tvshow-category-${index + 1}`, content: `Best ${tvshow.name} tvshow full HD` }
                 ];
                 metaTags.forEach(tag => {
                     const metaElement = document.createElement("meta");
@@ -257,59 +257,59 @@ body {
             });
         }
 
-        function generatemovieSchema() {
-    const schemaScript = document.getElementById("movie-schema");
-    const movies = moviesData.movies.map(movie => ({
+        function generatetvshowSchema() {
+    const schemaScript = document.getElementById("tvshow-schema");
+    const tvshows = tvshowsData.tvshows.map(tvshow => ({
         "@context": "https://schema.org",
-        "@type": "Movie",
-        "name": movie.name,
-        "url": movie.url,
-        "image": movie.image || "default-movie-image.jpg", // Ensure a valid image
-        "dateCreated": movie.dateCreated || "2024-01-01", // Add proper date format
+        "@type": "tvshow",
+        "name": tvshow.name,
+        "url": tvshow.url,
+        "image": tvshow.image || "default-tvshow-image.jpg", // Ensure a valid image
+        "dateCreated": tvshow.dateCreated || "2024-01-01", // Add proper date format
         "director": {
             "@type": "Person",
-            "name": movie.director || "Unknown Director"
+            "name": tvshow.director || "Unknown Director"
         },
         "aggregateRating": {
             "@type": "AggregateRating",
-            "ratingValue": movie.ratingValue || "8.0",
-            "reviewCount": movie.reviewCount || "1000"
+            "ratingValue": tvshow.ratingValue || "8.0",
+            "reviewCount": tvshow.reviewCount || "1000"
         }
     }));
 
-    schemaScript.textContent = JSON.stringify(movies, null, 2);
+    schemaScript.textContent = JSON.stringify(tvshows, null, 2);
 }
-        function displaymovies(page) {
-            const movieList = document.getElementById("movieList");
+        function displaytvshows(page) {
+            const tvshowList = document.getElementById("tvshowList");
             const pagination = document.getElementById("pagination");
-            movieList.innerHTML = "";
+            tvshowList.innerHTML = "";
             pagination.innerHTML = "";
-            const start = (page - 1) * moviesPerPage;
-            const end = start + moviesPerPage;
-            const paginatedmovies = moviesData.movies.slice(start, end);
-            paginatedmovies.forEach(movie => {
+            const start = (page - 1) * tvshowsPerPage;
+            const end = start + tvshowsPerPage;
+            const paginatedtvshows = tvshowsData.tvshows.slice(start, end);
+            paginatedtvshows.forEach(tvshow => {
                 const row = document.createElement("tr");
                 const nameCell = document.createElement("td");
-                nameCell.textContent = movie.name;
+                nameCell.textContent = tvshow.name;
                 const linkCell = document.createElement("td");
-                const movieLink = document.createElement("a");
-                movieLink.href = movie.url;
-                movieLink.textContent = "See More";
-                movieLink.target = "_blank";
-                movieLink.style.color = "white";
-                linkCell.appendChild(movieLink);
+                const tvshowLink = document.createElement("a");
+                tvshowLink.href = tvshow.url;
+                tvshowLink.textContent = "See More";
+                tvshowLink.target = "_blank";
+                tvshowLink.style.color = "white";
+                linkCell.appendChild(tvshowLink);
                 row.appendChild(nameCell);
                 row.appendChild(linkCell);
-                movieList.appendChild(row);
+                tvshowList.appendChild(row);
             });
-            const totalPages = Math.ceil(moviesData.movies.length / moviesPerPage);
+            const totalPages = Math.ceil(tvshowsData.tvshows.length / tvshowsPerPage);
             for (let i = 1; i <= totalPages; i++) {
                 const btn = document.createElement("button");
                 btn.textContent = i;
                 btn.classList.add("page-btn");
                 btn.onclick = () => {
                     currentPage = i;
-                    displaymovies(i);
+                    displaytvshows(i);
                 };
                 if (i === page) btn.style.background = "#0056b3";
                 pagination.appendChild(btn);
@@ -317,38 +317,38 @@ body {
         }
 
         generateMetaTags();
-        generatemovieSchema();
-        displaymovies(currentPage);
+        generatetvshowSchema();
+        displaytvshows(currentPage);
     </script>
 <script>
-    function searchmovies() {
+    function searchtvshows() {
         let input = document.getElementById("searchInput").value.toLowerCase();
-        let movieList = document.getElementById("movieList");
+        let tvshowList = document.getElementById("tvshowList");
 
-        if (!movieList) return; // If no movie list, exit function
+        if (!tvshowList) return; // If no tvshow list, exit function
 
-        movieList.innerHTML = ""; // Clear current list
+        tvshowList.innerHTML = ""; // Clear current list
 
-        moviesData.movies.forEach(movie => {
-            if (movie.name.toLowerCase().includes(input)) {
+        tvshowsData.tvshows.forEach(tvshow => {
+            if (tvshow.name.toLowerCase().includes(input)) {
                 let row = document.createElement("tr");
                 let nameCell = document.createElement("td");
-                nameCell.textContent = movie.name;
+                nameCell.textContent = tvshow.name;
                 let linkCell = document.createElement("td");
-                let movieLink = document.createElement("a");
-                movieLink.href = movie.url;
-                movieLink.textContent = "See More";
-                movieLink.target = "_blank";
-                movieLink.style.color = "white";
-                linkCell.appendChild(movieLink);
+                let tvshowLink = document.createElement("a");
+                tvshowLink.href = tvshow.url;
+                tvshowLink.textContent = "See More";
+                tvshowLink.target = "_blank";
+                tvshowLink.style.color = "white";
+                linkCell.appendChild(tvshowLink);
                 row.appendChild(nameCell);
                 row.appendChild(linkCell);
-                movieList.appendChild(row);
+                tvshowList.appendChild(row);
             }
         });
 
-        if (movieList.innerHTML === "") {
-            movieList.innerHTML = "<tr><td colspan='2' style='text-align: center;'>No movies found</td></tr>";
+        if (tvshowList.innerHTML === "") {
+            tvshowList.innerHTML = "<tr><td colspan='2' style='text-align: center;'>No tvshows found</td></tr>";
         }
     }
 </script>
