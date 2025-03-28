@@ -8,6 +8,7 @@
     <meta name="keywords" content="free tvshows, play online, download tvshows, best adventure tvshows, top PC tvshows">
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tvshow-schema" type="application/ld+json"></script>
     <style>
         body { font-family: 'Merriweather', serif; background-size: cover; color: white; }
 
@@ -194,8 +195,6 @@ body {
 
 </style>
     
-    <!-- Schema.org JSON-LD Placeholder -->
-    <script id="tvshow-schema" type="application/ld+json"></script>
 </head>
 <body>
 <picture>
@@ -236,7 +235,101 @@ body {
     <div class="pagination" id="pagination"></div>
 
     <script src="tvshow.js"></script>
-  
+    <script>
+        const tvshowsPerPage = 50;
+        let currentPage = 1;
+
+        function generateMetaTags() {
+            const head = document.head;
+            tvshowsData.tvshows.forEach((tvshow, index) => {
+                const metaTags = [
+                    { name: `tvshow-download-${index + 1}`, content: `${tvshow.name} Free Download` },
+                    { name: `tvshow-play-${index + 1}`, content: `Watch ${tvshow.name} Online,Streaming, Full HD, Free tvshows` },
+                    { name: `tvshow-category-${index + 1}`, content: `Best ${tvshow.name} tvshow full HD` }
+                ];
+                metaTags.forEach(tag => {
+                    const metaElement = document.createElement("meta");
+                    metaElement.name = tag.name;
+                    metaElement.content = tag.content;
+                    head.appendChild(metaElement);
+                });
+            });
+        }
+
+        function generatetvshowSchema() {
+    const schemaScript = document.getElementById("tvshow-schema");
+
+    if (!schemaScript) {
+        console.error("Schema script tag not found!");
+        return;
+    }
+
+    const tvshowsSchema = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Top 1000 tvshows Worldwide",
+        "itemListElement": tvshowsData.tvshows.map((tvshow, index) => ({
+            "@type": "TVseries",  // Change to "TVSeries" if applicable
+            "position": index + 1,
+            "name": tvshow.name,
+            "url": tvshow.url,
+            "image": tvshow.image || "default-tvshow-image.jpg",
+            "dateCreated": tvshow.dateCreated || "2024-01-01",
+            "director": {
+                "@type": "Person",
+                "name": tvshow.director || "Unknown Director"
+            },
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": tvshow.ratingValue || "8.0",
+                "reviewCount": tvshow.reviewCount || "1000"
+            }
+        }))
+    };
+
+    schemaScript.textContent = JSON.stringify(tvshowsSchema, null, 2);
+}
+        function displaytvshows(page) {
+            const tvshowList = document.getElementById("tvshowList");
+            const pagination = document.getElementById("pagination");
+            tvshowList.innerHTML = "";
+            pagination.innerHTML = "";
+            const start = (page - 1) * tvshowsPerPage;
+            const end = start + tvshowsPerPage;
+            const paginatedtvshows = tvshowsData.tvshows.slice(start, end);
+            paginatedtvshows.forEach(tvshow => {
+                const row = document.createElement("tr");
+                const nameCell = document.createElement("td");
+                nameCell.textContent = tvshow.name;
+                const linkCell = document.createElement("td");
+                const tvshowLink = document.createElement("a");
+                tvshowLink.href = tvshow.url;
+                tvshowLink.textContent = "See More";
+                tvshowLink.target = "_blank";
+                tvshowLink.style.color = "white";
+                linkCell.appendChild(tvshowLink);
+                row.appendChild(nameCell);
+                row.appendChild(linkCell);
+                tvshowList.appendChild(row);
+            });
+            const totalPages = Math.ceil(tvshowsData.tvshows.length / tvshowsPerPage);
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement("button");
+                btn.textContent = i;
+                btn.classList.add("page-btn");
+                btn.onclick = () => {
+                    currentPage = i;
+                    displaytvshows(i);
+                };
+                if (i === page) btn.style.background = "#0056b3";
+                pagination.appendChild(btn);
+            }
+        }
+
+        generateMetaTags();
+        generatetvshowSchema();
+        displaytvshows(currentPage);
+    </script>
 <script>
     function searchtvshows() {
         let input = document.getElementById("searchInput").value.toLowerCase();
@@ -268,106 +361,6 @@ body {
             tvshowList.innerHTML = "<tr><td colspan='2' style='text-align: center;'>No tvshows found</td></tr>";
         }
     }
-</script>
-<script>
-    const tvshowsPerPage = 50;
-    let currentPage = 1;
-
-    function generateMetaTags() {
-        const head = document.head;
-        tvshowsData.tvshows.forEach((tvshow, index) => {
-            const metaTags = [
-                { name: `tvshow-download-${index + 1}`, content: `${tvshow.name} Free Download` },
-                { name: `tvshow-play-${index + 1}`, content: `Watch ${tvshow.name} Online,Streaming, Full HD, Free tvshows` },
-                { name: `tvshow-category-${index + 1}`, content: `Best ${tvshow.name} tvshow full HD` }
-            ];
-            metaTags.forEach(tag => {
-                const metaElement = document.createElement("meta");
-                metaElement.name = tag.name;
-                metaElement.content = tag.content;
-                head.appendChild(metaElement);
-            });
-        });
-    }
-
-    function generatetvshowSchema() {
-    const schemaScript = document.getElementById("tvshow-schema");
-
-    if (!tvshowsData || !tvshowsData.tvshows || tvshowsData.tvshows.length === 0) {
-        console.error("No TV show data available.");
-        return;
-    }
-
-    const tvshows = tvshowsData.tvshows.map((tvshow, index) => ({
-        "@type": "TVSeries",
-        "name": tvshow.name,
-        "url": tvshow.url
-    }));
-
-    const schemaData = {
-        "@context": "https://schema.org",
-        "@graph": [
-            {
-                "@type": "ItemList",
-                "name": "Top 1000 TV Shows Worldwide",
-                "itemListElement": tvshows.map((tvshow, index) => ({
-                    "@type": "ListItem",
-                    "position": index + 1,
-                    "item": tvshow
-                }))
-            }
-        ]
-    };
-
-    schemaScript.textContent = JSON.stringify(schemaData, null, 2);
-}
-    function displaytvshows(page) {
-        const tvshowList = document.getElementById("tvshowList");
-        const pagination = document.getElementById("pagination");
-        tvshowList.innerHTML = "";
-        pagination.innerHTML = "";
-        const start = (page - 1) * tvshowsPerPage;
-        const end = start + tvshowsPerPage;
-        const paginatedtvshows = tvshowsData.tvshows.slice(start, end);
-        paginatedtvshows.forEach(tvshow => {
-            const row = document.createElement("tr");
-            const nameCell = document.createElement("td");
-            nameCell.textContent = tvshow.name;
-            const linkCell = document.createElement("td");
-            const tvshowLink = document.createElement("a");
-            tvshowLink.href = tvshow.url;
-            tvshowLink.textContent = "See More";
-            tvshowLink.target = "_blank";
-            tvshowLink.style.color = "white";
-            linkCell.appendChild(tvshowLink);
-            row.appendChild(nameCell);
-            row.appendChild(linkCell);
-            tvshowList.appendChild(row);
-        });
-        const totalPages = Math.ceil(tvshowsData.tvshows.length / tvshowsPerPage);
-        for (let i = 1; i <= totalPages; i++) {
-            const btn = document.createElement("button");
-            btn.textContent = i;
-            btn.classList.add("page-btn");
-            btn.onclick = () => {
-                currentPage = i;
-                displaytvshows(i);
-            };
-            if (i === page) btn.style.background = "#0056b3";
-            pagination.appendChild(btn);
-        }
-    }
-   
-    displaytvshows(currentPage);
-    generateMetaTags();
-    document.addEventListener("DOMContentLoaded", function () {
-    if (typeof tvshowsData !== "undefined") {
-        generatetvshowSchema();
-    } else {
-        console.error("tvshow.js data not loaded.");
-    }
-});
-   
 </script>
 </body>
 </html>
