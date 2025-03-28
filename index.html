@@ -261,21 +261,10 @@ body {
     const schemaScript = document.getElementById("tvshow-schema");
     const tvshows = tvshowsData.tvshows.map(tvshow => ({
         "@context": "https://schema.org",
-        "@type": "tvshow",
+        "@type": "TVShow",
         "name": tvshow.name,
-        "url": tvshow.url,
-        "image": tvshow.image || "default-tvshow-image.jpg", // Ensure a valid image
-        "dateCreated": tvshow.dateCreated || "2024-01-01", // Add proper date format
-        "director": {
-            "@type": "Person",
-            "name": tvshow.director || "Unknown Director"
-        },
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": tvshow.ratingValue || "8.0",
-            "reviewCount": tvshow.reviewCount || "1000"
-        }
-    }));
+        "url": tvshow.url
+    })); 
 
     schemaScript.textContent = JSON.stringify(tvshows, null, 2);
 }
