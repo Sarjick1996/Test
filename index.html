@@ -279,11 +279,13 @@ body {
                 "@type": "Person",
                 "name": tvshow.director || "Unknown Director"
             },
-            "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": tvshow.ratingValue || "8.0",
-                "reviewCount": tvshow.reviewCount || "1000"
-            }
+           "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": Math.min(Math.max(parseFloat(tvshow.ratingValue) || 8.0, 1), 10),
+    "bestRating": 10,
+    "worstRating": 1,
+    "reviewCount": tvshow.reviewCount || "1000"
+}
         }))
     };
 
