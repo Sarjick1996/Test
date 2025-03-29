@@ -262,13 +262,19 @@ body {
     // Check if the schemaScript element exists
     if (!schemaScript) return;
 
-    // Generate JSON-LD for all movies
+    // Generate JSON-LD for all movies with required fields
     const moviesSchema = {
         "@context": "https://schema.org",
         "@graph": moviesData.movies.map(movie => ({
             "@type": "Movie",
             "name": movie.name,
-            "url": movie.url || ""  // Ensure URL is always present
+            "url": movie.url || "", // Ensure URL is present
+            "image": movie.image || "https://example.com/default-movie-image.jpg", // Default image
+            "dateCreated": movie.dateCreated || "2024-01-01", // Default date
+            "director": {
+                "@type": "Person",
+                "name": movie.director || "Unknown Director" // Default director
+            }
         }))
     };
 
