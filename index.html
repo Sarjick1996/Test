@@ -258,25 +258,40 @@ body {
         }
         function generatemovieSchema() {
     const schemaScript = document.getElementById("movie-schema");
-    const movies = moviesData.movies.map(movie => ({
-        "@context": "https://schema.org",
-        "@type": "Movie",
-        "name": movie.name,
-        "url": movie.url && movie.url.startsWith("http") ? movie.url : "https://example.com/default-movie-url",
-        "image": movie.image || "default-movie-image.jpg",
-        "dateCreated": movie.dateCreated || "2024-01-01",
-        "director": {
-            "@type": "Person",
-            "name": movie.director || "Unknown Director"
-        },
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": movie.ratingValue || "8.0",
-            "reviewCount": movie.reviewCount || "1000"
-        }
-    }));
 
-    schemaScript.textContent = JSON.stringify(movies, null, 2);
+    // Check if the schemaScript element exists
+    if (!schemaScript) return;
+
+    // Generate JSON-LD for all movies
+    const moviesSchema = {
+        "@context": "https://schema.org",
+        "@graph": moviesData.movies.map(movie => ({
+            "@type": "Movie",
+            "name": movie.name,
+            "url": movie.url || "",  // Ensure URL is always present
+            "image": movie.image || "default-movie-image.jpg", // Use default if no image
+            "datePublished": movie.dateCreated || "2024-01-01", // Default date
+            "genre": movie.genre || "Unknown", // Provide default genre
+            "director": {
+                "@type": "Person",
+                "name": movie.director || "Unknown Director"
+            },
+            "actor": movie.actors ? movie.actors.map(actor => ({
+                "@type": "Person",
+                "name": actor
+            })) : [], // Ensure actors array is valid
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": movie.ratingValue ? String(movie.ratingValue) : "8.0", 
+                "bestRating": "10",
+                "worstRating": "1",
+                "ratingCount": movie.reviewCount ? String(movie.reviewCount) : "1000"
+            }
+        }))
+    };
+
+    // Inject JSON-LD into the script tag
+    schemaScript.textContent = JSON.stringify(moviesSchema, null, 2);
 }
         function displaymovies(page) {
             const movieList = document.getElementById("movieList");
