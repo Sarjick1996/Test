@@ -256,43 +256,28 @@ body {
                 });
             });
         }
+
         function generatemovieSchema() {
     const schemaScript = document.getElementById("movie-schema");
-
-    // Ensure the schemaScript element exists
-    if (!schemaScript) return;
-
-    // Generate JSON-LD for all movies with required fields
-    const moviesSchema = {
+    const movies = moviesData.movies.map(movie => ({
         "@context": "https://schema.org",
-        "@graph": moviesData.movies.map(movie => ({
-            "@type": "Movie",
-            "name": movie.name,
-            "url": movie.url || "", // Ensure URL is present
-            "image": movie.image || "https://example.com/default-movie-image.jpg", // Default image if missing
-            "dateCreated": movie.dateCreated || "2024-01-01", // Default date
-            "description": movie.description && typeof movie.description === "string"
-                ? movie.description
-                : `Watch ${movie.name}, a top-rated movie available for streaming and download in high quality.`, // Ensures a proper description
-            "director": movie.director
-                ? {
-                    "@type": "Person",
-                    "name": movie.director
-                }
-                : undefined, // If no director, omit the field
-            "genre": movie.genre || "Drama", // Adds genre if missing
-            "aggregateRating": movie.rating
-                ? {
-                    "@type": "AggregateRating",
-                    "ratingValue": movie.rating.toString(),
-                    "reviewCount": movie.reviewCount ? movie.reviewCount.toString() : "100"
-                }
-                : undefined // If no rating, omit the field
-        }))
-    };
+        "@type": "Movie",
+        "name": movie.name,
+        "url": movie.url,
+        "image": movie.image || "default-movie-image.jpg", // Ensure a valid image
+        "dateCreated": movie.dateCreated || "2024-01-01", // Add proper date format
+        "director": {
+            "@type": "Person",
+            "name": movie.director || "Unknown Director"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": movie.ratingValue || "8.0",
+            "reviewCount": movie.reviewCount || "1000"
+        }
+    }));
 
-    // Inject JSON-LD into the script tag
-    schemaScript.textContent = JSON.stringify(moviesSchema, null, 2);
+    schemaScript.textContent = JSON.stringify(movies, null, 2);
 }
         function displaymovies(page) {
             const movieList = document.getElementById("movieList");
@@ -337,40 +322,35 @@ body {
     </script>
 <script>
     function searchmovies() {
-    if (!moviesData || !moviesData.movies) {
-        console.error("moviesData is missing or undefined.");
-        return;
-    }
+        let input = document.getElementById("searchInput").value.toLowerCase();
+        let movieList = document.getElementById("movieList");
 
-    let input = document.getElementById("searchInput").value.toLowerCase();
-    let movieList = document.getElementById("movieList");
+        if (!movieList) return; // If no movie list, exit function
 
-    if (!movieList) return;
+        movieList.innerHTML = ""; // Clear current list
 
-    movieList.innerHTML = "";
+        moviesData.movies.forEach(movie => {
+            if (movie.name.toLowerCase().includes(input)) {
+                let row = document.createElement("tr");
+                let nameCell = document.createElement("td");
+                nameCell.textContent = movie.name;
+                let linkCell = document.createElement("td");
+                let movieLink = document.createElement("a");
+                movieLink.href = movie.url;
+                movieLink.textContent = "See More";
+                movieLink.target = "_blank";
+                movieLink.style.color = "white";
+                linkCell.appendChild(movieLink);
+                row.appendChild(nameCell);
+                row.appendChild(linkCell);
+                movieList.appendChild(row);
+            }
+        });
 
-    moviesData.movies.forEach(movie => {
-        if (movie.name.toLowerCase().includes(input)) {
-            let row = document.createElement("tr");
-            let nameCell = document.createElement("td");
-            nameCell.textContent = movie.name;
-            let linkCell = document.createElement("td");
-            let movieLink = document.createElement("a");
-            movieLink.href = movie.url;
-            movieLink.textContent = "See More";
-            movieLink.target = "_blank";
-            movieLink.style.color = "white";
-            linkCell.appendChild(movieLink);
-            row.appendChild(nameCell);
-            row.appendChild(linkCell);
-            movieList.appendChild(row);
+        if (movieList.innerHTML === "") {
+            movieList.innerHTML = "<tr><td colspan='2' style='text-align: center;'>No movies found</td></tr>";
         }
-    });
-
-    if (movieList.innerHTML === "") {
-        movieList.innerHTML = "<tr><td colspan='2' style='text-align: center;'>No movies found</td></tr>";
     }
-}
 </script>
 </body>
 </html>
