@@ -259,26 +259,38 @@ body {
         function generatemovieSchema() {
     const schemaScript = document.getElementById("movie-schema");
 
-    // Check if the schemaScript element exists
-    if (!schemaScript) return;
+    if (!schemaScript) {
+        console.error("Schema script tag not found.");
+        return;
+    }
 
-    // Generate JSON-LD for all movies with required fields
+    if (!moviesData || !moviesData.movies || moviesData.movies.length === 0) {
+        console.error("Movies data is missing or empty.");
+        return;
+    }
+
     const moviesSchema = {
         "@context": "https://schema.org",
         "@graph": moviesData.movies.map(movie => ({
             "@type": "Movie",
-            "name": movie.name,
-            "url": movie.url || "", // Ensure URL is present
-            "image": movie.image || "https://example.com/default-movie-image.jpg", // Default image
-            "dateCreated": movie.dateCreated || "2024-01-01", // Default date
+            "name": movie.name || "Unknown Title",
+            "url": movie.url || "https://example.com/default-movie",
+            "image": movie.image || "https://example.com/default-movie-image.jpg",
+            "dateCreated": movie.dateCreated || "2024-01-01",
             "director": {
                 "@type": "Person",
-                "name": movie.director || "Unknown Director" // Default director
+                "name": movie.director || "Unknown Director"
+            },
+            "genre": movie.genre || "Drama",
+            "description": movie.description || "No description available.",
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": movie.rating || "N/A",
+                "reviewCount": movie.reviewCount || 0
             }
         }))
     };
 
-    // Inject JSON-LD into the script tag
     schemaScript.textContent = JSON.stringify(moviesSchema, null, 2);
 }
         function displaymovies(page) {
