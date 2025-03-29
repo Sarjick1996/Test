@@ -268,25 +268,7 @@ body {
         "@graph": moviesData.movies.map(movie => ({
             "@type": "Movie",
             "name": movie.name,
-            "url": movie.url || "",  // Ensure URL is always present
-            "image": movie.image || "default-movie-image.jpg", // Use default if no image
-            "datePublished": movie.dateCreated || "2024-01-01", // Default date
-            "genre": movie.genre || "Unknown", // Provide default genre
-            "director": {
-                "@type": "Person",
-                "name": movie.director || "Unknown Director"
-            },
-            "actor": movie.actors ? movie.actors.map(actor => ({
-                "@type": "Person",
-                "name": actor
-            })) : [], // Ensure actors array is valid
-            "aggregateRating": {
-                "@type": "AggregateRating",
-                "ratingValue": movie.ratingValue ? String(movie.ratingValue) : "8.0", 
-                "bestRating": "10",
-                "worstRating": "1",
-                "ratingCount": movie.reviewCount ? String(movie.reviewCount) : "1000"
-            }
+            "url": movie.url || ""  // Ensure URL is always present
         }))
     };
 
