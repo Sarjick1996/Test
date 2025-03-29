@@ -259,7 +259,7 @@ body {
         function generatemovieSchema() {
     const schemaScript = document.getElementById("movie-schema");
 
-    // Check if the schemaScript element exists
+    // Ensure the schemaScript element exists
     if (!schemaScript) return;
 
     // Generate JSON-LD for all movies with required fields
@@ -269,13 +269,25 @@ body {
             "@type": "Movie",
             "name": movie.name,
             "url": movie.url || "", // Ensure URL is present
-            "image": movie.image || "https://example.com/default-movie-image.jpg", // Default image
+            "image": movie.image || "https://example.com/default-movie-image.jpg", // Default image if missing
             "dateCreated": movie.dateCreated || "2024-01-01", // Default date
-            "description": movie.description || "Watch " + movie.name + " online in full HD for free.", // Add description
-            "director": {
-                "@type": "Person",
-                "name": movie.director || "Unknown Director" // Default director
-            }
+            "description": movie.description && typeof movie.description === "string"
+                ? movie.description
+                : `Watch ${movie.name}, a top-rated movie available for streaming and download in high quality.`, // Ensures a proper description
+            "director": movie.director
+                ? {
+                    "@type": "Person",
+                    "name": movie.director
+                }
+                : undefined, // If no director, omit the field
+            "genre": movie.genre || "Drama", // Adds genre if missing
+            "aggregateRating": movie.rating
+                ? {
+                    "@type": "AggregateRating",
+                    "ratingValue": movie.rating.toString(),
+                    "reviewCount": movie.reviewCount ? movie.reviewCount.toString() : "100"
+                }
+                : undefined // If no rating, omit the field
         }))
     };
 
