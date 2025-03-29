@@ -23034,7 +23034,7 @@ const moviesData = {
     },
     {
         "name": "The Lorax",
-        "url": "https://www.themoviedb.org/movie/2148"
+        "url": "https://www.themoviedb.org/movie/25148"
     },
     {
         "name": "Confessions of a Brazilian Call Girl",
