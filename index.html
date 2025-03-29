@@ -256,29 +256,39 @@ body {
                 });
             });
         }
-
         function generatemovieSchema() {
     const schemaScript = document.getElementById("movie-schema");
-    const movies = moviesData.movies.map(movie => ({
-        "@context": "https://schema.org",
-        "@type": "Movie",
-        "name": movie.name,
-        "url": movie.url,
-        "image": movie.image || "default-movie-image.jpg", // Ensure a valid image
-        "dateCreated": movie.dateCreated || "2024-01-01", // Add proper date format
-        "director": {
-            "@type": "Person",
-            "name": movie.director || "Unknown Director"
-        },
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": movie.ratingValue || "8.0",
-            "reviewCount": movie.reviewCount || "1000"
-        }
-    }));
 
-    schemaScript.textContent = JSON.stringify(movies, null, 2);
+    if (!moviesData || !moviesData.movies) {
+        console.error("moviesData is missing or undefined.");
+        return;
+    }
+
+    const schema = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "itemListElement": moviesData.movies.map((movie, index) => ({
+            "@type": "Movie",
+            "position": index + 1,
+            "name": movie.name,
+            "url": movie.url,
+            "image": movie.image || "https://example.com/default-movie.jpg",
+            "dateCreated": movie.dateCreated || "2024-01-01",
+            "director": {
+                "@type": "Person",
+                "name": movie.director || "Unknown"
+            },
+            "aggregateRating": {
+                "@type": "AggregateRating",
+                "ratingValue": movie.ratingValue || "8.0",
+                "reviewCount": movie.reviewCount || "1000"
+            }
+        }))
+    };
+
+    schemaScript.textContent = JSON.stringify(schema, null, 2);
 }
+
         function displaymovies(page) {
             const movieList = document.getElementById("movieList");
             const pagination = document.getElementById("pagination");
@@ -322,35 +332,40 @@ body {
     </script>
 <script>
     function searchmovies() {
-        let input = document.getElementById("searchInput").value.toLowerCase();
-        let movieList = document.getElementById("movieList");
-
-        if (!movieList) return; // If no movie list, exit function
-
-        movieList.innerHTML = ""; // Clear current list
-
-        moviesData.movies.forEach(movie => {
-            if (movie.name.toLowerCase().includes(input)) {
-                let row = document.createElement("tr");
-                let nameCell = document.createElement("td");
-                nameCell.textContent = movie.name;
-                let linkCell = document.createElement("td");
-                let movieLink = document.createElement("a");
-                movieLink.href = movie.url;
-                movieLink.textContent = "See More";
-                movieLink.target = "_blank";
-                movieLink.style.color = "white";
-                linkCell.appendChild(movieLink);
-                row.appendChild(nameCell);
-                row.appendChild(linkCell);
-                movieList.appendChild(row);
-            }
-        });
-
-        if (movieList.innerHTML === "") {
-            movieList.innerHTML = "<tr><td colspan='2' style='text-align: center;'>No movies found</td></tr>";
-        }
+    if (!moviesData || !moviesData.movies) {
+        console.error("moviesData is missing or undefined.");
+        return;
     }
+
+    let input = document.getElementById("searchInput").value.toLowerCase();
+    let movieList = document.getElementById("movieList");
+
+    if (!movieList) return;
+
+    movieList.innerHTML = "";
+
+    moviesData.movies.forEach(movie => {
+        if (movie.name.toLowerCase().includes(input)) {
+            let row = document.createElement("tr");
+            let nameCell = document.createElement("td");
+            nameCell.textContent = movie.name;
+            let linkCell = document.createElement("td");
+            let movieLink = document.createElement("a");
+            movieLink.href = movie.url;
+            movieLink.textContent = "See More";
+            movieLink.target = "_blank";
+            movieLink.style.color = "white";
+            linkCell.appendChild(movieLink);
+            row.appendChild(nameCell);
+            row.appendChild(linkCell);
+            movieList.appendChild(row);
+        }
+    });
+
+    if (movieList.innerHTML === "") {
+        movieList.innerHTML = "<tr><td colspan='2' style='text-align: center;'>No movies found</td></tr>";
+    }
+}
 </script>
 </body>
 </html>
