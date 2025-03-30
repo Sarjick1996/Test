@@ -258,26 +258,24 @@ body {
         }
 
         function generateanimechema() {
-            const schemaScript = document.getElementById("anime-schema");
-            const anime = animeData.anime.map(anime => ({
-                "@context": "https://schema.org",
-                "@type": "Videoanime",
-                "name": anime.name,
-                "url": anime.url,
-                "applicationCategory": "anime",
-                "operatingSystem": "Windows, macOS, PlayStation, Xbox, Switch",
-                "author": {
-                    "@type": "Organization",
-                    "name": "Top anime List"
-                },
-                "aggregateRating": {
-                    "@type": "AggregateRating",
-                    "ratingValue": "4.5",
-                    "reviewCount": "1000"
-                }
-            }));
-            schemaScript.textContent = JSON.stringify(anime, null, 2);
+    const schemaScript = document.getElementById("anime-schema");
+    const anime = animeData.anime.map(anime => ({
+        "@context": "https://schema.org",
+        "@type": "TVSeries",  // Change this to "Movie" if it's a film
+        "name": anime.name,
+        "url": anime.url,
+        "author": {
+            "@type": "Organization",
+            "name": "Top anime List"
+        },
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.5",
+            "reviewCount": "1000"
         }
+    }));
+    schemaScript.textContent = JSON.stringify(anime, null, 2);
+}
 
         function displayanime(page) {
             const animeList = document.getElementById("animeList");
