@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top music List - Play & Download</title>
-    <meta name="description" content="Discover the best free music to play online or download. Explore top-rated music from various genres!">
-    <meta name="keywords" content="free music, play online, download music, best adventure music, top PC music">
+    <title>Top application List - Play & Download</title>
+    <meta name="description" content="Discover the best free application to play online or download. Explore top-rated application from various genres!">
+    <meta name="keywords" content="free application, play online, download application, best adventure application, top PC application">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Merriweather', serif; background-size: cover; color: white; }
 
 body {
-    background-image: url('musicimage/sunwukong.webp'); /* Use WEBP */
+    background-image: url('applicationimage/sunwukong.webp'); /* Use WEBP */
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat;
@@ -29,11 +29,11 @@ body {
 
         .container { text-align: center; margin-top: 20px; background: rgba(0, 0, 0, 0.7); padding: 20px; border-radius: 10px; }
         .table-container { width: 90%; margin: auto; margin-top: 20px; background: rgba(255, 255, 255, 0.2); border-radius: 10px; overflow: hidden; }
-        .music-table { width: 100%; border-collapse: collapse; }
-        .music-table th, .music-table td { font-size: 1rem; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.3); text-align: left; }
-.music-table th {
+        .application-table { width: 100%; border-collapse: collapse; }
+        .application-table th, .application-table td { font-size: 1rem; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.3); text-align: left; }
+.application-table th {
     text-align: center; /* Center align text */
-    font-size: 1.3rem; /* Same as music names */
+    font-size: 1.3rem; /* Same as application names */
     font-family: 'Poppins', sans-serif; /* Matching font */
     font-weight: bold;
     color: white;
@@ -47,8 +47,8 @@ body {
         -1px  1px 0 black,  
          1px  1px 0 black; /* Creates black outline */
 }
-.music-table td:first-child { 
-    text-align: center;  /* Center music names */
+.application-table td:first-child { 
+    text-align: center;  /* Center application names */
     font-size: 1.3rem;  /* Slightly larger font */
     font-family: 'Poppins', sans-serif;  /* Stylish font */
     font-weight: bold;  
@@ -163,12 +163,12 @@ body {
     margin-top: 50px; /* Smaller space below the Home button */
 }
 
-/* Reduces space above the music table */
+/* Reduces space above the application table */
 .table-container {
     margin-top: 20px; /* Keeps a clean layout without too much gap */
 }
 
-.music-table a {
+.application-table a {
     display: inline-block;
     padding: 8px 12px;
     font-size: 1rem;
@@ -184,7 +184,7 @@ body {
     transition: all 0.3s ease-in-out;
 }
 
-.music-table a:hover {
+.application-table a:hover {
     background: rgba(0, 123, 255, 0.5); /* Darker blue on hover */
     border-color: rgba(0, 123, 255, 1);
     box-shadow: 0px 6px 12px rgba(0, 123, 255, 0.8); /* Stronger glow */
@@ -195,12 +195,12 @@ body {
 </style>
     
     <!-- Schema.org JSON-LD Placeholder -->
-    <script id="music-schema" type="application/ld+json"></script>
+    <script id="application-schema" type="application/ld+json"></script>
 </head>
 <body>
 <picture>
-    <source srcset="musicimage/sunwukong.webp" type="image/webp">
-    <img src="musicimage/sunwukong.jpg" alt="Background Image" style="
+    <source srcset="applicationimage/sunwukong.webp" type="image/webp">
+    <img src="applicationimage/sunwukong.jpg" alt="Background Image" style="
         position: fixed; 
         top: 0; 
         left: 0; 
@@ -218,35 +218,35 @@ body {
 <!-- Wrapper to properly align elements -->
 <div class="search-wrapper">
     <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search music..." onkeyup="searchmusic()">
-        <button onclick="searchmusic()">Search</button>
+        <input type="text" id="searchInput" placeholder="Search application..." onkeyup="searchapplication()">
+        <button onclick="searchapplication()">Search</button>
     </div>
-</div>    <h1 class="premium-heading">Top 1000 music Worldwide</h1>
+</div>    <h1 class="premium-heading">Top 1000 application Worldwide</h1>
     <div class="table-container">
-        <table class="music-table">
+        <table class="application-table">
             <thead>
                 <tr>
-                    <th>music Name</th>
+                    <th>application Name</th>
                     <th>Link</th>
                 </tr>
             </thead>
-            <tbody id="musicList"></tbody>
+            <tbody id="applicationList"></tbody>
         </table>
     </div>
     <div class="pagination" id="pagination"></div>
 
-    <script src="music.js"></script>
+    <script src="application.js"></script>
     <script>
-        const musicPerPage = 50;
+        const applicationPerPage = 50;
         let currentPage = 1;
 
         function generateMetaTags() {
             const head = document.head;
-            musicData.music.forEach((music, index) => {
+            applicationData.application.forEach((application, index) => {
                 const metaTags = [
-                    { name: `music-download-${index + 1}`, content: `${music.name} Free Download` },
-                    { name: `music-play-${index + 1}`, content: `Play ${music.name} Online` },
-                    { name: `music-category-${index + 1}`, content: `Best ${music.name} music` }
+                    { name: `application-download-${index + 1}`, content: `${application.name} Free Download` },
+                    { name: `application-play-${index + 1}`, content: `Play ${application.name} Online` },
+                    { name: `application-category-${index + 1}`, content: `Best ${application.name} application` }
                 ];
                 metaTags.forEach(tag => {
                     const metaElement = document.createElement("meta");
@@ -257,16 +257,16 @@ body {
             });
         }
 
-        function generatemusicchema() {
-    const schemaScript = document.getElementById("music-schema");
-    const music = musicData.music.map(music => ({
+        function generateapplicationchema() {
+    const schemaScript = document.getElementById("application-schema");
+    const application = applicationData.application.map(application => ({
         "@context": "https://schema.org",
         "@type": "TVSeries",  // Change this to "Movie" if it's a film
-        "name": music.name,
-        "url": music.url,
+        "name": application.name,
+        "url": application.url,
         "author": {
             "@type": "Organization",
-            "name": "Top music List"
+            "name": "Top application List"
         },
         "aggregateRating": {
             "@type": "AggregateRating",
@@ -274,40 +274,40 @@ body {
             "reviewCount": "1000"
         }
     }));
-    schemaScript.textContent = JSON.stringify(music, null, 2);
+    schemaScript.textContent = JSON.stringify(application, null, 2);
 }
 
-        function displaymusic(page) {
-            const musicList = document.getElementById("musicList");
+        function displayapplication(page) {
+            const applicationList = document.getElementById("applicationList");
             const pagination = document.getElementById("pagination");
-            musicList.innerHTML = "";
+            applicationList.innerHTML = "";
             pagination.innerHTML = "";
-            const start = (page - 1) * musicPerPage;
-            const end = start + musicPerPage;
-            const paginatedmusic = musicData.music.slice(start, end);
-            paginatedmusic.forEach(music => {
+            const start = (page - 1) * applicationPerPage;
+            const end = start + applicationPerPage;
+            const paginatedapplication = applicationData.application.slice(start, end);
+            paginatedapplication.forEach(application => {
                 const row = document.createElement("tr");
                 const nameCell = document.createElement("td");
-                nameCell.textContent = music.name;
+                nameCell.textContent = application.name;
                 const linkCell = document.createElement("td");
-                const musicLink = document.createElement("a");
-                musicLink.href = music.url;
-                musicLink.textContent = "See More";
-                musicLink.target = "_blank";
-                musicLink.style.color = "white";
-                linkCell.appendChild(musicLink);
+                const applicationLink = document.createElement("a");
+                applicationLink.href = application.url;
+                applicationLink.textContent = "See More";
+                applicationLink.target = "_blank";
+                applicationLink.style.color = "white";
+                linkCell.appendChild(applicationLink);
                 row.appendChild(nameCell);
                 row.appendChild(linkCell);
-                musicList.appendChild(row);
+                applicationList.appendChild(row);
             });
-            const totalPages = Math.ceil(musicData.music.length / musicPerPage);
+            const totalPages = Math.ceil(applicationData.application.length / applicationPerPage);
             for (let i = 1; i <= totalPages; i++) {
                 const btn = document.createElement("button");
                 btn.textContent = i;
                 btn.classList.add("page-btn");
                 btn.onclick = () => {
                     currentPage = i;
-                    displaymusic(i);
+                    displayapplication(i);
                 };
                 if (i === page) btn.style.background = "#0056b3";
                 pagination.appendChild(btn);
@@ -315,38 +315,38 @@ body {
         }
 
         generateMetaTags();
-        generatemusicchema();
-        displaymusic(currentPage);
+        generateapplicationchema();
+        displayapplication(currentPage);
     </script>
 <script>
-    function searchmusic() {
+    function searchapplication() {
         let input = document.getElementById("searchInput").value.toLowerCase();
-        let musicList = document.getElementById("musicList");
+        let applicationList = document.getElementById("applicationList");
 
-        if (!musicList) return; // If no music list, exit function
+        if (!applicationList) return; // If no application list, exit function
 
-        musicList.innerHTML = ""; // Clear current list
+        applicationList.innerHTML = ""; // Clear current list
 
-        musicData.music.forEach(music => {
-            if (music.name.toLowerCase().includes(input)) {
+        applicationData.application.forEach(application => {
+            if (application.name.toLowerCase().includes(input)) {
                 let row = document.createElement("tr");
                 let nameCell = document.createElement("td");
-                nameCell.textContent = music.name;
+                nameCell.textContent = application.name;
                 let linkCell = document.createElement("td");
-                let musicLink = document.createElement("a");
-                musicLink.href = music.url;
-                musicLink.textContent = "See More";
-                musicLink.target = "_blank";
-                musicLink.style.color = "white";
-                linkCell.appendChild(musicLink);
+                let applicationLink = document.createElement("a");
+                applicationLink.href = application.url;
+                applicationLink.textContent = "See More";
+                applicationLink.target = "_blank";
+                applicationLink.style.color = "white";
+                linkCell.appendChild(applicationLink);
                 row.appendChild(nameCell);
                 row.appendChild(linkCell);
-                musicList.appendChild(row);
+                applicationList.appendChild(row);
             }
         });
 
-        if (musicList.innerHTML === "") {
-            musicList.innerHTML = "<tr><td colspan='2' style='text-align: center;'>No music found</td></tr>";
+        if (applicationList.innerHTML === "") {
+            applicationList.innerHTML = "<tr><td colspan='2' style='text-align: center;'>No application found</td></tr>";
         }
     }
 </script>
