@@ -3,352 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top application List - Play & Download</title>
-    <meta name="description" content="Discover the best free application to play online or download. Explore top-rated application from various genres!">
-    <meta name="keywords" content="free application, play online, download application, best adventure application, top PC application">
+    <title>Latest Movies, Games & Torrent News | 1337Xtreme</title>
+    <meta name="description" content="Stay updated with the latest movie and game news. Powered by real-time RSS feeds.">
+    <meta name="keywords" content="torrent news, latest movies, latest games, best torrent sites, 1337x proxy, YTS, RARBG, EZTV, movie news, actor news">
+    <meta name="robots" content="index, follow">
     
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Canonical URL -->
+    <link rel="canonical" href="your-movienews-page-url">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Latest Movies, Games & Torrent News | 1337Xtreme">
+    <meta property="og:description" content="Stay updated with the latest movie and game news. Powered by real-time RSS feeds.">
+    <meta property="og:image" content="your-image-url.jpg">
+    <meta property="og:url" content="your-movienews-page-url">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <script>
+        async function fetchNews() {
+            document.getElementById("news-list").innerHTML = "Loading news...";
+            let rssFeeds = [
+                "https://api.rss2json.com/v1/api.json?rss_url=https://www.gamespot.com/feeds/news/",
+                "https://api.rss2json.com/v1/api.json?rss_url=https://www.hollywoodreporter.com/feed/",
+                "https://api.rss2json.com/v1/api.json?rss_url=https://www.ign.com/feeds/movies"
+            ];
+    
+            try {
+                allNews = [];
+                for (let feedUrl of rssFeeds) {
+                    let response = await fetch(feedUrl);
+                    let data = await response.json();
+                    if (data.items) {
+                        data.items.forEach(item => {
+                            allNews.push({
+                                title: item.title,
+                                link: item.link,
+                                description: item.description.substring(0, 150) + "...",
+                                image: item.thumbnail || "https://via.placeholder.com/800x400"
+                            });
+                        });
+                    }
+                }
+                displayNews();
+                createPagination();
+                updateMetaTags();
+            } catch (error) {
+                console.error("News Fetch Error:", error);
+                document.getElementById("news-list").innerHTML = "Failed to load news.";
+            }
+        }
+    
+        function updateMetaTags() {
+            if (allNews.length > 0) {
+                let firstNews = allNews[0];
+    
+                document.title = firstNews.title; // Update Page Title
+    
+                // Update Meta Tags
+                document.querySelector('meta[name="description"]').setAttribute("content", firstNews.description);
+                document.querySelector('meta[property="og:title"]').setAttribute("content", firstNews.title);
+                document.querySelector('meta[property="og:description"]').setAttribute("content", firstNews.description);
+                document.querySelector('meta[property="og:image"]').setAttribute("content", firstNews.image);
+                document.querySelector('meta[property="og:url"]').setAttribute("content", firstNews.link);
+            }
+        }
+    
+        fetchNews();
+    </script>
+
+    
     <style>
-        body { font-family: 'Merriweather', serif; background-size: cover; color: white; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            background: url('background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
+            padding: 20px;
+        }
+        .news-table {
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .news-table th, .news-table td {
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 14px;
+            font-size: 1.1rem;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        .news-table th {
+            background: rgba(255, 0, 0, 0.4);
+            color: white;
+            font-weight: bold;
+        }
+        .pagination {
+            margin-top: 20px;
+        }
+        .pagination button {
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            color: white;
+            background: rgba(255, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 1);
+            border-radius: 6px;
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .pagination button:hover {
+            background: rgba(255, 0, 0, 0.5);
+            box-shadow: 0px 4px 8px rgba(255, 255, 255, 1);
 
-body {
-    background-image: url('applicationimage/sunwukong.webp'); /* Use WEBP */
-    background-size: cover; 
-    background-position: center; 
-    background-repeat: no-repeat;
-    background-attachment: fixed; /* Keeps background static while scrolling */
-}
-
-/* Mobile-friendly settings */
-@media (max-width: 768px) {
-    body {
-        background-size: cover;
-        background-position: center;
-    }
-}
-
-        .container { text-align: center; margin-top: 20px; background: rgba(0, 0, 0, 0.7); padding: 20px; border-radius: 10px; }
-        .table-container { width: 90%; margin: auto; margin-top: 20px; background: rgba(255, 255, 255, 0.2); border-radius: 10px; overflow: hidden; }
-        .application-table { width: 100%; border-collapse: collapse; }
-        .application-table th, .application-table td { font-size: 1rem; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.3); text-align: left; }
-.application-table th {
-    text-align: center; /* Center align text */
-    font-size: 1.3rem; /* Same as application names */
-    font-family: 'Poppins', sans-serif; /* Matching font */
-    font-weight: bold;
-    color: white;
-    letter-spacing: 0.5px; /* Slight spacing */
-    background: rgba(0, 123, 255, 0.4); /* Bluish transparent */
-    border-bottom: 2px solid rgba(0, 123, 255, 0.7); /* Blue border for separation */
-    backdrop-filter: blur(6px); /* Glass effect */
-    text-shadow: 
-        -1px -1px 0 black,  
-         1px -1px 0 black,  
-        -1px  1px 0 black,  
-         1px  1px 0 black; /* Creates black outline */
-}
-.application-table td:first-child { 
-    text-align: center;  /* Center application names */
-    font-size: 1.3rem;  /* Slightly larger font */
-    font-family: 'Poppins', sans-serif;  /* Stylish font */
-    font-weight: bold;  
-    color: white;  /* White text */
-    letter-spacing: 0.5px; /* Slight spacing */
-    background: transparent; /* Clean look */
-    padding: 10px; /* Space inside */
-    text-shadow: 
-        -1px -1px 0 black,  
-         1px -1px 0 black,  
-        -1px  1px 0 black,  
-         1px  1px 0 black; /* Creates black outline */
-}      .page-btn { padding: 12px 20px; font-size: 1.1rem; font-weight: bold; text-align: center; color: white; background: rgba(255, 0, 0, 0.3); border: 2px solid rgba(255, 255, 255, 1); border-radius: 6px; backdrop-filter: blur(6px); box-shadow: 0px 3px 6px rgba(255, 255, 255, 0.8); transition: all 0.3s ease-in-out; cursor: pointer; margin: 5px; }
-        .page-btn:hover { background: rgba(255, 0, 0, 0.5); box-shadow: 0px 4px 8px rgba(255, 255, 255, 1); transform: scale(1.05); }
-        .home-button { position: fixed; top: 20px; right: 20px; padding: 10px 15px; background: rgba(255, 0, 0, 0.5); color: white; font-size: 1rem; font-weight: bold; border: 2px solid rgba(255, 255, 255, 0.7); border-radius: 6px; text-decoration: none; backdrop-filter: blur(6px); box-shadow: 0px 3px 6px rgba(255, 255, 255, 0.8); transition: all 0.3s ease-in-out; z-index: 1000; }
-        .home-button:hover { background: rgba(255, 0, 0, 0.7); transform: scale(1.1); }
-        .premium-heading {
-    text-align: center;
-    font-size: 1.8rem;
-    font-weight: bold;
-    margin: 10px auto;
-    color: white;
-    text-shadow: 2px 2px 8px rgba(255, 215, 0, 0.7);
-    background: rgba(0, 0, 0, 0.2);
-    padding: 10px;
-    border-radius: 8px;
-    display: block;
-    width: fit-content;
-}
-}
-}
-.search-container {
-    text-align: center;
-    margin: 20px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap; /* Allows better mobile responsiveness */
-}
-
-.search-container {
-    text-align: center;
-    margin: 10px auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-}
-
-#searchInput {
-    width: 40%; /* Smaller width */
-    padding: 8px;
-    font-size: 1rem;
-    font-family: 'Poppins', sans-serif;
-    border: 1.5px solid white;
-    border-radius: 6px;
-    outline: none;
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    text-align: center;
-    transition: all 0.3s ease-in-out;
-}
-
-#searchInput:focus {
-    border-color: #ff0000;
-    box-shadow: 0px 0px 5px rgba(255, 0, 0, 0.7);
-}
-
-.search-container button {
-    display: inline-block;
-    padding: 8px 12px;
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    color: white;
-    background: rgba(0, 123, 255, 0.2); /* Light bluish transparent */
-    border: 2px solid rgba(0, 123, 255, 0.6); /* Blue border */
-    border-radius: 6px;
-    backdrop-filter: blur(6px); /* Glass effect */
-    box-shadow: 0px 4px 6px rgba(0, 123, 255, 0.5); /* Soft blue glow */
-    transition: all 0.3s ease-in-out;
-}
-
-.search-container button:hover {
-    background: rgba(0, 123, 255, 0.5); /* Darker blue on hover */
-    border-color: rgba(0, 123, 255, 1);
-    box-shadow: 0px 6px 12px rgba(0, 123, 255, 0.8); /* Stronger glow */
-    transform: scale(1.05);
-}
-
-/* Ensures proper spacing between Home button and search bar */
-.home-button {
-    display: block;
-    margin-bottom: 10px; /* Adjusts spacing */
-}
-
-
-
- body {
-    padding-top: 50px; /* Reduces space at the top */
-}
-
-/* Moves the Home button slightly lower but not too much */
-.home-button {
-    top: 30px; /* Slightly lower */
-}
-
-/* Reduces gap below Home button */
-.search-wrapper {
-    margin-top: 50px; /* Smaller space below the Home button */
-}
-
-/* Reduces space above the application table */
-.table-container {
-    margin-top: 20px; /* Keeps a clean layout without too much gap */
-}
-
-.application-table a {
-    display: inline-block;
-    padding: 8px 12px;
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    color: white;
-    background: rgba(0, 123, 255, 0.2); /* Light bluish transparent */
-    border: 2px solid rgba(0, 123, 255, 0.6); /* Blue border */
-    border-radius: 6px;
-    backdrop-filter: blur(6px); /* Glass effect */
-    box-shadow: 0px 4px 6px rgba(0, 123, 255, 0.5); /* Soft blue glow */
-    transition: all 0.3s ease-in-out;
-}
-
-.application-table a:hover {
-    background: rgba(0, 123, 255, 0.5); /* Darker blue on hover */
-    border-color: rgba(0, 123, 255, 1);
-    box-shadow: 0px 6px 12px rgba(0, 123, 255, 0.8); /* Stronger glow */
-    transform: scale(1.05);
-}
-
-
-</style>
-    
-    <!-- Schema.org JSON-LD Placeholder -->
-    <script id="application-schema" type="application/ld+json"></script>
+        }
+  .home-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            color: white;
+            background: rgba(255, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 1);
+            border-radius: 6px;
+            transition: all 0.3s ease-in-out;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .home-button:hover {
+            background: rgba(255, 0, 0, 0.5);
+            box-shadow: 0px 4px 8px rgba(255, 255, 255, 1);
+        }
+    </style>
 </head>
 <body>
-<picture>
-    <source srcset="applicationimage/sunwukong.webp" type="image/webp">
-    <img src="applicationimage/sunwukong.jpg" alt="Background Image" style="
-        position: fixed; 
-        top: 0; 
-        left: 0; 
-        width: 100vw; 
-        height: 100vh; 
-        object-fit: cover; 
-        z-index: -1;
-        pointer-events: none; /* Prevents interaction issues */
-        user-select: none; /* Avoids accidental selection */
-    ">
-</picture>
-
 <a href="index.html" class="home-button">Home</a>
-
-<!-- Wrapper to properly align elements -->
-<div class="search-wrapper">
-    <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search application..." onkeyup="searchapplication()">
-        <button onclick="searchapplication()">Search</button>
-    </div>
-</div>    <h1 class="premium-heading">Top 1000 application Worldwide</h1>
-    <div class="table-container">
-        <table class="application-table">
-            <thead>
-                <tr>
-                    <th>application Name</th>
-                    <th>Link</th>
-                </tr>
-            </thead>
-            <tbody id="applicationList"></tbody>
-        </table>
-    </div>
+    <h1>Latest Movies, Games & Torrent News</h1>
+    <table class="news-table">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Title</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody id="news-list"></tbody>
+    </table>
     <div class="pagination" id="pagination"></div>
-
-    <script src="application.js"></script>
+    
     <script>
-        const applicationPerPage = 50;
         let currentPage = 1;
+        const newsPerPage = 8;
+        let allNews = [];
 
-        function generateMetaTags() {
-            const head = document.head;
-            applicationData.application.forEach((application, index) => {
-                const metaTags = [
-                    { name: `application-download-${index + 1}`, content: `${application.name} Free Download` },
-                    { name: `application-play-${index + 1}`, content: `Play ${application.name} Online` },
-                    { name: `application-category-${index + 1}`, content: `Best ${application.name} application` }
-                ];
-                metaTags.forEach(tag => {
-                    const metaElement = document.createElement("meta");
-                    metaElement.name = tag.name;
-                    metaElement.content = tag.content;
-                    head.appendChild(metaElement);
-                });
-            });
-        }
+        async function fetchNews() {
+            document.getElementById("news-list").innerHTML = "Loading news...";
+            let rssFeeds = [
+                "https://api.rss2json.com/v1/api.json?rss_url=https://www.gamespot.com/feeds/news/",
+                "https://api.rss2json.com/v1/api.json?rss_url=https://www.hollywoodreporter.com/feed/",
+                "https://api.rss2json.com/v1/api.json?rss_url=https://www.ign.com/feeds/movies"
+            ];
 
-        function generateapplicationchema() {
-    const schemaScript = document.getElementById("application-schema");
-    const application = applicationData.application.map(application => ({
-        "@context": "https://schema.org",
-        "@type": "TVSeries",  // Change this to "Movie" if it's a film
-        "name": application.name,
-        "url": application.url,
-        "author": {
-            "@type": "Organization",
-            "name": "Top application List"
-        },
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "4.5",
-            "reviewCount": "1000"
-        }
-    }));
-    schemaScript.textContent = JSON.stringify(application, null, 2);
-}
-
-        function displayapplication(page) {
-            const applicationList = document.getElementById("applicationList");
-            const pagination = document.getElementById("pagination");
-            applicationList.innerHTML = "";
-            pagination.innerHTML = "";
-            const start = (page - 1) * applicationPerPage;
-            const end = start + applicationPerPage;
-            const paginatedapplication = applicationData.application.slice(start, end);
-            paginatedapplication.forEach(application => {
-                const row = document.createElement("tr");
-                const nameCell = document.createElement("td");
-                nameCell.textContent = application.name;
-                const linkCell = document.createElement("td");
-                const applicationLink = document.createElement("a");
-                applicationLink.href = application.url;
-                applicationLink.textContent = "See More";
-                applicationLink.target = "_blank";
-                applicationLink.style.color = "white";
-                linkCell.appendChild(applicationLink);
-                row.appendChild(nameCell);
-                row.appendChild(linkCell);
-                applicationList.appendChild(row);
-            });
-            const totalPages = Math.ceil(applicationData.application.length / applicationPerPage);
-            for (let i = 1; i <= totalPages; i++) {
-                const btn = document.createElement("button");
-                btn.textContent = i;
-                btn.classList.add("page-btn");
-                btn.onclick = () => {
-                    currentPage = i;
-                    displayapplication(i);
-                };
-                if (i === page) btn.style.background = "#0056b3";
-                pagination.appendChild(btn);
+            try {
+                allNews = [];
+                for (let feedUrl of rssFeeds) {
+                    let response = await fetch(feedUrl);
+                    let data = await response.json();
+                    if (data.items) {
+                        data.items.forEach(item => {
+                            allNews.push({
+                                title: item.title,
+                                link: item.link,
+                                description: item.description.substring(0, 150) + "...",
+                                image: item.thumbnail || "https://via.placeholder.com/800x400"
+                            });
+                        });
+                    }
+                }
+                displayNews();
+                createPagination();
+            } catch (error) {
+                console.error("News Fetch Error:", error);
+                document.getElementById("news-list").innerHTML = "Failed to load news.";
             }
         }
 
-        generateMetaTags();
-        generateapplicationchema();
-        displayapplication(currentPage);
+        function displayNews() {
+            let start = (currentPage - 1) * newsPerPage;
+            let end = start + newsPerPage;
+            let paginatedNews = allNews.slice(start, end);
+            document.getElementById("news-list").innerHTML = paginatedNews.map(news => 
+                `<tr>
+                    <td><img src='${news.image}' alt='${news.title}' width='120' height='80'></td>
+                    <td><a href='${news.link}' target='_blank'>${news.title}</a></td>
+                    <td>${news.description}</td>
+                </tr>`
+            ).join("");
+        }
+
+        function createPagination() {
+            let totalPages = Math.ceil(allNews.length / newsPerPage);
+            document.getElementById("pagination").innerHTML = 
+                Array.from({ length: totalPages }, (_, i) => `<button onclick='changePage(${i + 1})'>${i + 1}</button>`).join(" ");
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            displayNews();
+        }
+
+        fetchNews();
     </script>
-<script>
-    function searchapplication() {
-        let input = document.getElementById("searchInput").value.toLowerCase();
-        let applicationList = document.getElementById("applicationList");
-
-        if (!applicationList) return; // If no application list, exit function
-
-        applicationList.innerHTML = ""; // Clear current list
-
-        applicationData.application.forEach(application => {
-            if (application.name.toLowerCase().includes(input)) {
-                let row = document.createElement("tr");
-                let nameCell = document.createElement("td");
-                nameCell.textContent = application.name;
-                let linkCell = document.createElement("td");
-                let applicationLink = document.createElement("a");
-                applicationLink.href = application.url;
-                applicationLink.textContent = "See More";
-                applicationLink.target = "_blank";
-                applicationLink.style.color = "white";
-                linkCell.appendChild(applicationLink);
-                row.appendChild(nameCell);
-                row.appendChild(linkCell);
-                applicationList.appendChild(row);
-            }
-        });
-
-        if (applicationList.innerHTML === "") {
-            applicationList.innerHTML = "<tr><td colspan='2' style='text-align: center;'>No application found</td></tr>";
-        }
-    }
-</script>
 </body>
 </html>
