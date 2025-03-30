@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top movies List - Play & Download</title>
-    <meta name="description" content="Discover the best free movies to play online or download. Explore top-rated movies from various genres!">
-    <meta name="keywords" content="free movies, play online, download movies, best adventure movies, top PC movies">
+    <title>Top anime List - Play & Download</title>
+    <meta name="description" content="Discover the best free anime to play online or download. Explore top-rated anime from various genres!">
+    <meta name="keywords" content="free anime, play online, download anime, best adventure anime, top PC anime">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Merriweather', serif; background-size: cover; color: white; }
 
 body {
-    background-image: url('moviesimage/sunwukong.webp'); /* Use WEBP */
+    background-image: url('animeimage/sunwukong.webp'); /* Use WEBP */
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat;
@@ -29,11 +29,11 @@ body {
 
         .container { text-align: center; margin-top: 20px; background: rgba(0, 0, 0, 0.7); padding: 20px; border-radius: 10px; }
         .table-container { width: 90%; margin: auto; margin-top: 20px; background: rgba(255, 255, 255, 0.2); border-radius: 10px; overflow: hidden; }
-        .movie-table { width: 100%; border-collapse: collapse; }
-        .movie-table th, .movie-table td { font-size: 1rem; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.3); text-align: left; }
-.movie-table th {
+        .anime-table { width: 100%; border-collapse: collapse; }
+        .-table th, .anime-table td { font-size: 1rem; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.3); text-align: left; }
+.anime-table th {
     text-align: center; /* Center align text */
-    font-size: 1.3rem; /* Same as movie names */
+    font-size: 1.3rem; /* Same as anime names */
     font-family: 'Poppins', sans-serif; /* Matching font */
     font-weight: bold;
     color: white;
@@ -47,8 +47,8 @@ body {
         -1px  1px 0 black,  
          1px  1px 0 black; /* Creates black outline */
 }
-.movie-table td:first-child { 
-    text-align: center;  /* Center movie names */
+.anime-table td:first-child { 
+    text-align: center;  /* Center anime names */
     font-size: 1.3rem;  /* Slightly larger font */
     font-family: 'Poppins', sans-serif;  /* Stylish font */
     font-weight: bold;  
@@ -163,12 +163,12 @@ body {
     margin-top: 50px; /* Smaller space below the Home button */
 }
 
-/* Reduces space above the movie table */
+/* Reduces space above the anime table */
 .table-container {
     margin-top: 20px; /* Keeps a clean layout without too much gap */
 }
 
-.movie-table a {
+.anime-table a {
     display: inline-block;
     padding: 8px 12px;
     font-size: 1rem;
@@ -184,7 +184,7 @@ body {
     transition: all 0.3s ease-in-out;
 }
 
-.movie-table a:hover {
+.anime-table a:hover {
     background: rgba(0, 123, 255, 0.5); /* Darker blue on hover */
     border-color: rgba(0, 123, 255, 1);
     box-shadow: 0px 6px 12px rgba(0, 123, 255, 0.8); /* Stronger glow */
@@ -195,12 +195,12 @@ body {
 </style>
     
     <!-- Schema.org JSON-LD Placeholder -->
-    <script id="movie-schema" type="application/ld+json"></script>
+    <script id="anime-schema" type="application/ld+json"></script>
 </head>
 <body>
 <picture>
-    <source srcset="moviesimage/godfather.webp" type="image/webp">
-    <img src="moviesimage/godfather.jpg" alt="Background Image" style="
+    <source srcset="animeimage/sunwukong.webp" type="image/webp">
+    <img src="animeimage/sunwukong.jpg" alt="Background Image" style="
         position: fixed; 
         top: 0; 
         left: 0; 
@@ -218,35 +218,35 @@ body {
 <!-- Wrapper to properly align elements -->
 <div class="search-wrapper">
     <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search movies..." onkeyup="searchmovies()">
-        <button onclick="searchmovies()">Search</button>
+        <input type="text" id="searchInput" placeholder="Search anime..." onkeyup="searchanime()">
+        <button onclick="searchanime()">Search</button>
     </div>
-</div>    <h1 class="premium-heading">Top 1000 movies Worldwide</h1>
+</div>    <h1 class="premium-heading">Top 1000 anime Worldwide</h1>
     <div class="table-container">
-        <table class="movie-table">
+        <table class="anime-table">
             <thead>
                 <tr>
-                    <th>movie Name</th>
+                    <th>anime Name</th>
                     <th>Link</th>
                 </tr>
             </thead>
-            <tbody id="movieList"></tbody>
+            <tbody id="animeList"></tbody>
         </table>
     </div>
     <div class="pagination" id="pagination"></div>
 
-    <script src="movie.js"></script>
+    <script src="anime.js"></script>
     <script>
-        const moviesPerPage = 50;
+        const animePerPage = 50;
         let currentPage = 1;
 
         function generateMetaTags() {
             const head = document.head;
-            moviesData.movies.forEach((movie, index) => {
+            animeData.anime.forEach((anime, index) => {
                 const metaTags = [
-                    { name: `movie-download-${index + 1}`, content: `${movie.name} Free Download` },
-                    { name: `movie-play-${index + 1}`, content: `Watch ${movie.name} Online,Streaming, Full HD, Free Movies` },
-                    { name: `movie-category-${index + 1}`, content: `Best ${movie.name} movie full HD` }
+                    { name: `anime-download-${index + 1}`, content: `${anime.name} Free Download` },
+                    { name: `anime-play-${index + 1}`, content: `Play ${anime.name} Online` },
+                    { name: `anime-category-${index + 1}`, content: `Best ${anime.name} anime` }
                 ];
                 metaTags.forEach(tag => {
                     const metaElement = document.createElement("meta");
@@ -257,59 +257,59 @@ body {
             });
         }
 
-        function generatemovieSchema() {
-    const schemaScript = document.getElementById("movie-schema");
-    const movies = moviesData.movies.map(movie => ({
-        "@context": "https://schema.org",
-        "@type": "Movie",
-        "name": movie.name,
-        "url": movie.url,
-        "image": movie.image || "default-movie-image.jpg", // Ensure a valid image
-        "dateCreated": movie.dateCreated || "2024-01-01", // Add proper date format
-        "director": {
-            "@type": "Person",
-            "name": movie.director || "Unknown Director"
-        },
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": movie.ratingValue || "8.0",
-            "reviewCount": movie.reviewCount || "1000"
+        function generateanimechema() {
+            const schemaScript = document.getElementById("anime-schema");
+            const anime = animeData.anime.map(anime => ({
+                "@context": "https://schema.org",
+                "@type": "Videoanime",
+                "name": anime.name,
+                "url": anime.url,
+                "applicationCategory": "anime",
+                "operatingSystem": "Windows, macOS, PlayStation, Xbox, Switch",
+                "author": {
+                    "@type": "Organization",
+                    "name": "Top anime List"
+                },
+                "aggregateRating": {
+                    "@type": "AggregateRating",
+                    "ratingValue": "4.5",
+                    "reviewCount": "1000"
+                }
+            }));
+            schemaScript.textContent = JSON.stringify(anime, null, 2);
         }
-    }));
 
-    schemaScript.textContent = JSON.stringify(movies, null, 2);
-}
-        function displaymovies(page) {
-            const movieList = document.getElementById("movieList");
+        function displayanime(page) {
+            const animeList = document.getElementById("animeList");
             const pagination = document.getElementById("pagination");
-            movieList.innerHTML = "";
+            animeList.innerHTML = "";
             pagination.innerHTML = "";
-            const start = (page - 1) * moviesPerPage;
-            const end = start + moviesPerPage;
-            const paginatedmovies = moviesData.movies.slice(start, end);
-            paginatedmovies.forEach(movie => {
+            const start = (page - 1) * animePerPage;
+            const end = start + animePerPage;
+            const paginatedanime = animeData.anime.slice(start, end);
+            paginatedanime.forEach(anime => {
                 const row = document.createElement("tr");
                 const nameCell = document.createElement("td");
-                nameCell.textContent = movie.name;
+                nameCell.textContent = anime.name;
                 const linkCell = document.createElement("td");
-                const movieLink = document.createElement("a");
-                movieLink.href = movie.url;
-                movieLink.textContent = "See More";
-                movieLink.target = "_blank";
-                movieLink.style.color = "white";
-                linkCell.appendChild(movieLink);
+                const animeLink = document.createElement("a");
+                animeLink.href = anime.url;
+                animeLink.textContent = "See More";
+                animeLink.target = "_blank";
+                animeLink.style.color = "white";
+                linkCell.appendChild(animeLink);
                 row.appendChild(nameCell);
                 row.appendChild(linkCell);
-                movieList.appendChild(row);
+                animeList.appendChild(row);
             });
-            const totalPages = Math.ceil(moviesData.movies.length / moviesPerPage);
+            const totalPages = Math.ceil(animeData.anime.length / animePerPage);
             for (let i = 1; i <= totalPages; i++) {
                 const btn = document.createElement("button");
                 btn.textContent = i;
                 btn.classList.add("page-btn");
                 btn.onclick = () => {
                     currentPage = i;
-                    displaymovies(i);
+                    displayanime(i);
                 };
                 if (i === page) btn.style.background = "#0056b3";
                 pagination.appendChild(btn);
@@ -317,38 +317,38 @@ body {
         }
 
         generateMetaTags();
-        generatemovieSchema();
-        displaymovies(currentPage);
+        generateanimechema();
+        displayanime(currentPage);
     </script>
 <script>
-    function searchmovies() {
+    function searchanime() {
         let input = document.getElementById("searchInput").value.toLowerCase();
-        let movieList = document.getElementById("movieList");
+        let animeList = document.getElementById("animeList");
 
-        if (!movieList) return; // If no movie list, exit function
+        if (!animeList) return; // If no anime list, exit function
 
-        movieList.innerHTML = ""; // Clear current list
+        animeList.innerHTML = ""; // Clear current list
 
-        moviesData.movies.forEach(movie => {
-            if (movie.name.toLowerCase().includes(input)) {
+        animeData.anime.forEach(anime => {
+            if (anime.name.toLowerCase().includes(input)) {
                 let row = document.createElement("tr");
                 let nameCell = document.createElement("td");
-                nameCell.textContent = movie.name;
+                nameCell.textContent = anime.name;
                 let linkCell = document.createElement("td");
-                let movieLink = document.createElement("a");
-                movieLink.href = movie.url;
-                movieLink.textContent = "See More";
-                movieLink.target = "_blank";
-                movieLink.style.color = "white";
-                linkCell.appendChild(movieLink);
+                let animeLink = document.createElement("a");
+                animeLink.href = anime.url;
+                animeLink.textContent = "See More";
+                animeLink.target = "_blank";
+                animeLink.style.color = "white";
+                linkCell.appendChild(animeLink);
                 row.appendChild(nameCell);
                 row.appendChild(linkCell);
-                movieList.appendChild(row);
+                animeList.appendChild(row);
             }
         });
 
-        if (movieList.innerHTML === "") {
-            movieList.innerHTML = "<tr><td colspan='2' style='text-align: center;'>No movies found</td></tr>";
+        if (animeList.innerHTML === "") {
+            animeList.innerHTML = "<tr><td colspan='2' style='text-align: center;'>No anime found</td></tr>";
         }
     }
 </script>
