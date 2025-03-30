@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top anime List - Play & Download</title>
-    <meta name="description" content="Discover the best free anime to play online or download. Explore top-rated anime from various genres!">
-    <meta name="keywords" content="free anime, play online, download anime, best adventure anime, top PC anime">
+    <title>Top music List - Play & Download</title>
+    <meta name="description" content="Discover the best free music to play online or download. Explore top-rated music from various genres!">
+    <meta name="keywords" content="free music, play online, download music, best adventure music, top PC music">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { font-family: 'Merriweather', serif; background-size: cover; color: white; }
 
 body {
-    background-image: url('animeimage/sunwukong.webp'); /* Use WEBP */
+    background-image: url('musicimage/sunwukong.webp'); /* Use WEBP */
     background-size: cover; 
     background-position: center; 
     background-repeat: no-repeat;
@@ -29,11 +29,11 @@ body {
 
         .container { text-align: center; margin-top: 20px; background: rgba(0, 0, 0, 0.7); padding: 20px; border-radius: 10px; }
         .table-container { width: 90%; margin: auto; margin-top: 20px; background: rgba(255, 255, 255, 0.2); border-radius: 10px; overflow: hidden; }
-        .anime-table { width: 100%; border-collapse: collapse; }
-        .anime-table th, .anime-table td { font-size: 1rem; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.3); text-align: left; }
-.anime-table th {
+        .music-table { width: 100%; border-collapse: collapse; }
+        .music-table th, .music-table td { font-size: 1rem; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.3); background: rgba(0, 0, 0, 0.3); text-align: left; }
+.music-table th {
     text-align: center; /* Center align text */
-    font-size: 1.3rem; /* Same as anime names */
+    font-size: 1.3rem; /* Same as music names */
     font-family: 'Poppins', sans-serif; /* Matching font */
     font-weight: bold;
     color: white;
@@ -47,8 +47,8 @@ body {
         -1px  1px 0 black,  
          1px  1px 0 black; /* Creates black outline */
 }
-.anime-table td:first-child { 
-    text-align: center;  /* Center anime names */
+.music-table td:first-child { 
+    text-align: center;  /* Center music names */
     font-size: 1.3rem;  /* Slightly larger font */
     font-family: 'Poppins', sans-serif;  /* Stylish font */
     font-weight: bold;  
@@ -163,12 +163,12 @@ body {
     margin-top: 50px; /* Smaller space below the Home button */
 }
 
-/* Reduces space above the anime table */
+/* Reduces space above the music table */
 .table-container {
     margin-top: 20px; /* Keeps a clean layout without too much gap */
 }
 
-.anime-table a {
+.music-table a {
     display: inline-block;
     padding: 8px 12px;
     font-size: 1rem;
@@ -184,7 +184,7 @@ body {
     transition: all 0.3s ease-in-out;
 }
 
-.anime-table a:hover {
+.music-table a:hover {
     background: rgba(0, 123, 255, 0.5); /* Darker blue on hover */
     border-color: rgba(0, 123, 255, 1);
     box-shadow: 0px 6px 12px rgba(0, 123, 255, 0.8); /* Stronger glow */
@@ -195,12 +195,12 @@ body {
 </style>
     
     <!-- Schema.org JSON-LD Placeholder -->
-    <script id="anime-schema" type="application/ld+json"></script>
+    <script id="music-schema" type="application/ld+json"></script>
 </head>
 <body>
 <picture>
-    <source srcset="animeimage/sunwukong.webp" type="image/webp">
-    <img src="animeimage/sunwukong.jpg" alt="Background Image" style="
+    <source srcset="musicimage/sunwukong.webp" type="image/webp">
+    <img src="musicimage/sunwukong.jpg" alt="Background Image" style="
         position: fixed; 
         top: 0; 
         left: 0; 
@@ -218,35 +218,35 @@ body {
 <!-- Wrapper to properly align elements -->
 <div class="search-wrapper">
     <div class="search-container">
-        <input type="text" id="searchInput" placeholder="Search anime..." onkeyup="searchanime()">
-        <button onclick="searchanime()">Search</button>
+        <input type="text" id="searchInput" placeholder="Search music..." onkeyup="searchmusic()">
+        <button onclick="searchmusic()">Search</button>
     </div>
-</div>    <h1 class="premium-heading">Top 1000 anime Worldwide</h1>
+</div>    <h1 class="premium-heading">Top 1000 music Worldwide</h1>
     <div class="table-container">
-        <table class="anime-table">
+        <table class="music-table">
             <thead>
                 <tr>
-                    <th>anime Name</th>
+                    <th>music Name</th>
                     <th>Link</th>
                 </tr>
             </thead>
-            <tbody id="animeList"></tbody>
+            <tbody id="musicList"></tbody>
         </table>
     </div>
     <div class="pagination" id="pagination"></div>
 
-    <script src="anime.js"></script>
+    <script src="music.js"></script>
     <script>
-        const animePerPage = 50;
+        const musicPerPage = 50;
         let currentPage = 1;
 
         function generateMetaTags() {
             const head = document.head;
-            animeData.anime.forEach((anime, index) => {
+            musicData.music.forEach((music, index) => {
                 const metaTags = [
-                    { name: `anime-download-${index + 1}`, content: `${anime.name} Free Download` },
-                    { name: `anime-play-${index + 1}`, content: `Play ${anime.name} Online` },
-                    { name: `anime-category-${index + 1}`, content: `Best ${anime.name} anime` }
+                    { name: `music-download-${index + 1}`, content: `${music.name} Free Download` },
+                    { name: `music-play-${index + 1}`, content: `Play ${music.name} Online` },
+                    { name: `music-category-${index + 1}`, content: `Best ${music.name} music` }
                 ];
                 metaTags.forEach(tag => {
                     const metaElement = document.createElement("meta");
@@ -257,16 +257,16 @@ body {
             });
         }
 
-        function generateanimechema() {
-    const schemaScript = document.getElementById("anime-schema");
-    const anime = animeData.anime.map(anime => ({
+        function generatemusicchema() {
+    const schemaScript = document.getElementById("music-schema");
+    const music = musicData.music.map(music => ({
         "@context": "https://schema.org",
         "@type": "TVSeries",  // Change this to "Movie" if it's a film
-        "name": anime.name,
-        "url": anime.url,
+        "name": music.name,
+        "url": music.url,
         "author": {
             "@type": "Organization",
-            "name": "Top anime List"
+            "name": "Top music List"
         },
         "aggregateRating": {
             "@type": "AggregateRating",
@@ -274,40 +274,40 @@ body {
             "reviewCount": "1000"
         }
     }));
-    schemaScript.textContent = JSON.stringify(anime, null, 2);
+    schemaScript.textContent = JSON.stringify(music, null, 2);
 }
 
-        function displayanime(page) {
-            const animeList = document.getElementById("animeList");
+        function displaymusic(page) {
+            const musicList = document.getElementById("musicList");
             const pagination = document.getElementById("pagination");
-            animeList.innerHTML = "";
+            musicList.innerHTML = "";
             pagination.innerHTML = "";
-            const start = (page - 1) * animePerPage;
-            const end = start + animePerPage;
-            const paginatedanime = animeData.anime.slice(start, end);
-            paginatedanime.forEach(anime => {
+            const start = (page - 1) * musicPerPage;
+            const end = start + musicPerPage;
+            const paginatedmusic = musicData.music.slice(start, end);
+            paginatedmusic.forEach(music => {
                 const row = document.createElement("tr");
                 const nameCell = document.createElement("td");
-                nameCell.textContent = anime.name;
+                nameCell.textContent = music.name;
                 const linkCell = document.createElement("td");
-                const animeLink = document.createElement("a");
-                animeLink.href = anime.url;
-                animeLink.textContent = "See More";
-                animeLink.target = "_blank";
-                animeLink.style.color = "white";
-                linkCell.appendChild(animeLink);
+                const musicLink = document.createElement("a");
+                musicLink.href = music.url;
+                musicLink.textContent = "See More";
+                musicLink.target = "_blank";
+                musicLink.style.color = "white";
+                linkCell.appendChild(musicLink);
                 row.appendChild(nameCell);
                 row.appendChild(linkCell);
-                animeList.appendChild(row);
+                musicList.appendChild(row);
             });
-            const totalPages = Math.ceil(animeData.anime.length / animePerPage);
+            const totalPages = Math.ceil(musicData.music.length / musicPerPage);
             for (let i = 1; i <= totalPages; i++) {
                 const btn = document.createElement("button");
                 btn.textContent = i;
                 btn.classList.add("page-btn");
                 btn.onclick = () => {
                     currentPage = i;
-                    displayanime(i);
+                    displaymusic(i);
                 };
                 if (i === page) btn.style.background = "#0056b3";
                 pagination.appendChild(btn);
@@ -315,38 +315,38 @@ body {
         }
 
         generateMetaTags();
-        generateanimechema();
-        displayanime(currentPage);
+        generatemusicchema();
+        displaymusic(currentPage);
     </script>
 <script>
-    function searchanime() {
+    function searchmusic() {
         let input = document.getElementById("searchInput").value.toLowerCase();
-        let animeList = document.getElementById("animeList");
+        let musicList = document.getElementById("musicList");
 
-        if (!animeList) return; // If no anime list, exit function
+        if (!musicList) return; // If no music list, exit function
 
-        animeList.innerHTML = ""; // Clear current list
+        musicList.innerHTML = ""; // Clear current list
 
-        animeData.anime.forEach(anime => {
-            if (anime.name.toLowerCase().includes(input)) {
+        musicData.music.forEach(music => {
+            if (music.name.toLowerCase().includes(input)) {
                 let row = document.createElement("tr");
                 let nameCell = document.createElement("td");
-                nameCell.textContent = anime.name;
+                nameCell.textContent = music.name;
                 let linkCell = document.createElement("td");
-                let animeLink = document.createElement("a");
-                animeLink.href = anime.url;
-                animeLink.textContent = "See More";
-                animeLink.target = "_blank";
-                animeLink.style.color = "white";
-                linkCell.appendChild(animeLink);
+                let musicLink = document.createElement("a");
+                musicLink.href = music.url;
+                musicLink.textContent = "See More";
+                musicLink.target = "_blank";
+                musicLink.style.color = "white";
+                linkCell.appendChild(musicLink);
                 row.appendChild(nameCell);
                 row.appendChild(linkCell);
-                animeList.appendChild(row);
+                musicList.appendChild(row);
             }
         });
 
-        if (animeList.innerHTML === "") {
-            animeList.innerHTML = "<tr><td colspan='2' style='text-align: center;'>No anime found</td></tr>";
+        if (musicList.innerHTML === "") {
+            musicList.innerHTML = "<tr><td colspan='2' style='text-align: center;'>No music found</td></tr>";
         }
     }
 </script>
