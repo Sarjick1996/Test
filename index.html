@@ -18,58 +18,24 @@
     <meta property="og:url" content="your-movienews-page-url">
     <meta name="twitter:card" content="summary_large_image">
 
-    <script>
-        async function fetchNews() {
-            document.getElementById("news-list").innerHTML = "Loading news...";
-            let rssFeeds = [
-                "https://api.rss2json.com/v1/api.json?rss_url=https://www.gamespot.com/feeds/news/",
-                "https://api.rss2json.com/v1/api.json?rss_url=https://www.hollywoodreporter.com/feed/",
-                "https://api.rss2json.com/v1/api.json?rss_url=https://www.ign.com/feeds/movies"
-            ];
-    
-            try {
-                allNews = [];
-                for (let feedUrl of rssFeeds) {
-                    let response = await fetch(feedUrl);
-                    let data = await response.json();
-                    if (data.items) {
-                        data.items.forEach(item => {
-                            allNews.push({
-                                title: item.title,
-                                link: item.link,
-                                description: item.description.substring(0, 150) + "...",
-                                image: item.thumbnail || "https://via.placeholder.com/800x400"
-                            });
-                        });
-                    }
-                }
-                displayNews();
-                createPagination();
-                updateMetaTags();
-            } catch (error) {
-                console.error("News Fetch Error:", error);
-                document.getElementById("news-list").innerHTML = "Failed to load news.";
-            }
-        }
-    
-        function updateMetaTags() {
-            if (allNews.length > 0) {
-                let firstNews = allNews[0];
-    
-                document.title = firstNews.title; // Update Page Title
-    
-                // Update Meta Tags
-                document.querySelector('meta[name="description"]').setAttribute("content", firstNews.description);
-                document.querySelector('meta[property="og:title"]').setAttribute("content", firstNews.title);
-                document.querySelector('meta[property="og:description"]').setAttribute("content", firstNews.description);
-                document.querySelector('meta[property="og:image"]').setAttribute("content", firstNews.image);
-                document.querySelector('meta[property="og:url"]').setAttribute("content", firstNews.link);
-            }
-        }
-    
-        fetchNews();
+    <!-- Structured Data (Schema Markup) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "NewsArticle",
+      "headline": "Latest Movies, Games & Torrent News",
+      "author": {
+        "@type": "Organization",
+        "name": "1337Xtreme"
+      },
+      "datePublished": "2025-03-22",
+      "dateModified": "2025-03-22",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "your-movienews-page-url"
+      }
+    }
     </script>
-
     
     <style>
         body {
@@ -142,6 +108,109 @@
             box-shadow: 0px 4px 8px rgba(255, 255, 255, 1);
         }
     </style>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let currentPage = 1;
+        const newsPerPage = 8;
+        let allNews = [];
+
+        async function fetchNews() {
+            document.getElementById("news-list").innerHTML = "Loading news...";
+            let rssFeeds = [
+                "https://api.rss2json.com/v1/api.json?rss_url=https://www.gamespot.com/feeds/news/",
+                "https://api.rss2json.com/v1/api.json?rss_url=https://www.hollywoodreporter.com/feed/",
+                "https://api.rss2json.com/v1/api.json?rss_url=https://www.ign.com/feeds/movies"
+            ];
+
+            try {
+                allNews = [];
+                for (let feedUrl of rssFeeds) {
+                    let response = await fetch(feedUrl);
+                    let data = await response.json();
+                    if (data.items) {
+                        data.items.forEach(item => {
+                            allNews.push({
+                                title: item.title,
+                                link: item.link,
+                                description: item.description, // FULL news description
+                                image: item.thumbnail || "https://via.placeholder.com/800x400"
+                            });
+                        });
+                    }
+                }
+                displayNews();
+                createPagination();
+                updateMetaTags();
+            } catch (error) {
+                console.error("News Fetch Error:", error);
+                document.getElementById("news-list").innerHTML = "Failed to load news.";
+            }
+        }
+
+        function updateMetaTags() {
+            // Remove existing dynamic meta tags
+            document.querySelectorAll(".dynamic-meta").forEach(meta => meta.remove());
+
+            let start = (currentPage - 1) * newsPerPage;
+            let end = start + newsPerPage;
+            let paginatedNews = allNews.slice(start, end);
+
+            paginatedNews.forEach((news, index) => {
+                let metaTitle = document.createElement("meta");
+                metaTitle.setAttribute("name", `title-news-${index}`);
+                metaTitle.setAttribute("content", news.title);
+                metaTitle.classList.add("dynamic-meta");
+
+                let metaDesc = document.createElement("meta");
+                metaDesc.setAttribute("name", `description-news-${index}`);
+                metaDesc.setAttribute("content", news.description);
+                metaDesc.classList.add("dynamic-meta");
+
+                let metaImage = document.createElement("meta");
+                metaImage.setAttribute("property", "og:image");
+                metaImage.setAttribute("content", news.image);
+                metaImage.classList.add("dynamic-meta");
+
+                let metaUrl = document.createElement("meta");
+                metaUrl.setAttribute("property", "og:url");
+                metaUrl.setAttribute("content", news.link);
+                metaUrl.classList.add("dynamic-meta");
+
+                document.head.appendChild(metaTitle);
+                document.head.appendChild(metaDesc);
+                document.head.appendChild(metaImage);
+                document.head.appendChild(metaUrl);
+            });
+        }
+
+        function displayNews() {
+            let start = (currentPage - 1) * newsPerPage;
+            let end = start + newsPerPage;
+            let paginatedNews = allNews.slice(start, end);
+            document.getElementById("news-list").innerHTML = paginatedNews.map(news => 
+                `<tr>
+                    <td><img src='${news.image}' alt='${news.title}' width='120' height='80'></td>
+                    <td><a href='${news.link}' target='_blank'>${news.title}</a></td>
+                    <td>${news.description}</td>
+                </tr>`).join("");
+
+            updateMetaTags();
+        }
+
+        function createPagination() {
+            let totalPages = Math.ceil(allNews.length / newsPerPage);
+            document.getElementById("pagination").innerHTML = 
+                Array.from({ length: totalPages }, (_, i) => `<button onclick='changePage(${i + 1})'>${i + 1}</button>`).join(" ");
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            displayNews();
+        }
+
+        fetchNews();
+    });
+</script>
 </head>
 <body>
 <a href="index.html" class="home-button">Home</a>
