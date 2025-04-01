@@ -3,292 +3,403 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Latest Movies, Games & Torrent News | 1337Xtreme</title>
-    <meta name="description" content="Stay updated with the latest movie and game news. Powered by real-time RSS feeds.">
-    <meta name="keywords" content="torrent news, latest movies, latest games, best torrent sites, 1337x proxy, YTS, RARBG, EZTV, movie news, actor news">
-    <meta name="robots" content="index, follow">
-    
-    <!-- Canonical URL -->
-    <link rel="canonical" href="your-movienews-page-url">
-    
-    <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Latest Movies, Games & Torrent News | 1337Xtreme">
-    <meta property="og:description" content="Stay updated with the latest movie and game news. Powered by real-time RSS feeds.">
-    <meta property="og:image" content="your-image-url.jpg">
-    <meta property="og:url" content="your-movienews-page-url">
-    <meta name="twitter:card" content="summary_large_image">
-
-    <!-- Structured Data (Schema Markup) -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "NewsArticle",
-      "headline": "Latest Movies, Games & Torrent News",
-      "author": {
-        "@type": "Organization",
-        "name": "1337Xtreme"
-      },
-      "datePublished": "2025-03-22",
-      "dateModified": "2025-03-22",
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "your-movienews-page-url"
-      }
-    }
-    </script>
-    
+    <title>1337XSearch</title>
+<meta name="description" content="1337XSearch - The best torrent search engine to find movies, games, music, and more. Fast, secure, and reliable." />
+<meta name="keywords" content="torrent search, movies, games, music, free downloads, torrent aggregator, magnet links, best torrent sites" />
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="1337XSearch - Best Torrent Search Engine">
+<meta property="og:description" content="Search torrents from multiple sources easily. Movies, TV shows, games, and more!" />
+<meta property="og:image" content="background.jpg" />
+<meta property="og:url" content="https://yourwebsite.com" />
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://yourwebsite.com" />
     <style>
+/* Hamburger Button */
+.menu-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background-color: rgba(255, 255, 255, 0.3);
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Rotate entire button when open */
+.menu-btn.open {
+    transform: rotate(90deg);
+}
+
+
+.menu-btn:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Keep the three lines visible while rotating */
+.menu-btn span {
+    width: 30px;
+    height: 3px;
+    background-color: white;
+    display: block;
+    margin: 6px auto;
+    transition: transform 0.3s ease-in-out;
+}
+
+
+/* Sliding Menu */
+.dropdown-menu {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Initially hidden */
+    width: 250px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 999;
+    transition: left 0.5s ease-in-out;
+    padding-top: 60px;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.dropdown-menu.open {
+    left: 0;
+}
+        .dropdown-menu a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 15px;
+            font-family: 'Georgia', serif;
+            font-size: 1.2rem;
+            transition: 0.3s;
+            text-transform: capitalize;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        /* Sliding in effect */
+        .dropdown-menu.open {
+            left: 0;
+        }
+
+        /* Existing Styles */
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Merriweather', serif;
             text-align: center;
+            color: white;
             background: url('background.jpg') no-repeat center center fixed;
             background-size: cover;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            margin-top: 2vh;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 6px 15px rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        body {
+            font-family: 'Merriweather', serif;
+            text-align: center;
             color: white;
+            background: url('background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .container {
+            margin-top: 2vh;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 6px 15px rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            font-size: 3rem;
+            font-family: 'Georgia', serif;
+            color: white;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        .search-box {
+             padding: 15px;
+            width: 400px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            font-size: 1.2rem;
+            color: black;
+            background-color: white;
+            outline: none;
+
+        }
+        .search-button {
+            padding: 15px 30px;
+            background: linear-gradient(90deg, red, darkred);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            border: none;
+            transition: 0.3s ease-in-out;
+        }
+        .search-button:hover {
+            background: linear-gradient(90deg, darkred, red);
+            transform: scale(1.05);
+        }
+        .categories {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+        .category-button {
+            padding: 10px 20px;
+            background: linear-gradient(90deg, red, darkred);
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            border: none;
+            transition: 0.3s ease-in-out;
+        }
+        .category-button:hover {
+            background: linear-gradient(90deg, darkred, red);
+            transform: scale(1.05);
+        }
+
+.spacer {
+            height: 12vh;                                       /* Increased space to push disclaimer far below */
+        }
+
+        .footer {
+            margin-top: auto;
             padding: 20px;
         }
-        .news-table {
-            width: 80%;
-            margin: auto;
-            border-collapse: collapse;
-            margin-top: 20px;
+       .disclaimer, .legal-request {
             background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+                                     /* fade background */
+            padding: 15px;
             border-radius: 10px;
-            overflow: hidden;
-        }
-        .news-table th, .news-table td {
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            padding: 14px;
-            font-size: 1.1rem;
-            background: rgba(0, 0, 0, 0.3);
-        }
-        .news-table th {
-            background: rgba(255, 0, 0, 0.4);
-            color: white;
-            font-weight: bold;
-        }
-        .pagination {
-            margin-top: 20px;
-        }
-        .pagination button {
-            padding: 12px 20px;
-            font-size: 1rem;
-            font-weight: bold;
+            font-family: Arial, sans-serif;
+            color: white; /* Ensures readability */
             text-align: center;
-            color: white;
-            background: rgba(255, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 1);
-            border-radius: 6px;
-            transition: all 0.3s ease-in-out;
-            cursor: pointer;
-            margin: 5px;
+            width: 80%;
+            margin: 20px auto;
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Adds visibility */
         }
-        .pagination button:hover {
-            background: rgba(255, 0, 0, 0.5);
-            box-shadow: 0px 4px 8px rgba(255, 255, 255, 1);
-
+        .legal-request {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
         }
-  .home-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 12px 20px;
-            font-size: 1rem;
-            font-weight: bold;
-            text-align: center;
-            color: white;
-            background: rgba(255, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 1);
-            border-radius: 6px;
-            transition: all 0.3s ease-in-out;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .home-button:hover {
-            background: rgba(255, 0, 0, 0.5);
-            box-shadow: 0px 4px 8px rgba(255, 255, 255, 1);
-        }
+.copyright {
+    text-align: center;}
     </style>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        let currentPage = 1;
-        const newsPerPage = 8;
-        let allNews = [];
-
-        async function fetchNews() {
-            document.getElementById("news-list").innerHTML = "Loading news...";
-            let rssFeeds = [
-                "https://api.rss2json.com/v1/api.json?rss_url=https://www.gamespot.com/feeds/news/",
-                "https://api.rss2json.com/v1/api.json?rss_url=https://www.hollywoodreporter.com/feed/",
-                "https://api.rss2json.com/v1/api.json?rss_url=https://www.ign.com/feeds/movies"
-            ];
-
-            try {
-                allNews = [];
-                for (let feedUrl of rssFeeds) {
-                    let response = await fetch(feedUrl);
-                    let data = await response.json();
-                    if (data.items) {
-                        data.items.forEach(item => {
-                            allNews.push({
-                                title: item.title,
-                                link: item.link,
-                                description: item.description, // FULL news description
-                                image: item.thumbnail || "https://via.placeholder.com/800x400"
-                            });
-                        });
-                    }
-                }
-                displayNews();
-                createPagination();
-                updateMetaTags();
-            } catch (error) {
-                console.error("News Fetch Error:", error);
-                document.getElementById("news-list").innerHTML = "Failed to load news.";
+    <script>
+        function sanitizeInput(input) {
+            return input.replace(/[^a-zA-Z0-9 ]/g, "");
+        }
+        function searchTorrents() {
+            let query = sanitizeInput(document.getElementById("search").value.trim());
+            if (query) {
+                window.location.href = `2ndpage.html?query=${encodeURIComponent(query)}`;
             }
         }
-
-        function updateMetaTags() {
-            // Remove existing dynamic meta tags
-            document.querySelectorAll(".dynamic-meta").forEach(meta => meta.remove());
-
-            let start = (currentPage - 1) * newsPerPage;
-            let end = start + newsPerPage;
-            let paginatedNews = allNews.slice(start, end);
-
-            paginatedNews.forEach((news, index) => {
-                let metaTitle = document.createElement("meta");
-                metaTitle.setAttribute("name", `title-news-${index}`);
-                metaTitle.setAttribute("content", news.title);
-                metaTitle.classList.add("dynamic-meta");
-
-                let metaDesc = document.createElement("meta");
-                metaDesc.setAttribute("name", `description-news-${index}`);
-                metaDesc.setAttribute("content", news.description);
-                metaDesc.classList.add("dynamic-meta");
-
-                let metaImage = document.createElement("meta");
-                metaImage.setAttribute("property", "og:image");
-                metaImage.setAttribute("content", news.image);
-                metaImage.classList.add("dynamic-meta");
-
-                let metaUrl = document.createElement("meta");
-                metaUrl.setAttribute("property", "og:url");
-                metaUrl.setAttribute("content", news.link);
-                metaUrl.classList.add("dynamic-meta");
-
-                document.head.appendChild(metaTitle);
-                document.head.appendChild(metaDesc);
-                document.head.appendChild(metaImage);
-                document.head.appendChild(metaUrl);
+        function searchCategory(category) {
+            window.location.href = `2ndpage.html?query=${encodeURIComponent(category)}`;
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("search").addEventListener("keypress", function(event) {
+                if (event.key === "Enter") {
+                    searchTorrents();
+                }
             });
-        }
-
-        function displayNews() {
-            let start = (currentPage - 1) * newsPerPage;
-            let end = start + newsPerPage;
-            let paginatedNews = allNews.slice(start, end);
-            document.getElementById("news-list").innerHTML = paginatedNews.map(news => 
-                `<tr>
-                    <td><img src='${news.image}' alt='${news.title}' width='120' height='80'></td>
-                    <td><a href='${news.link}' target='_blank'>${news.title}</a></td>
-                    <td>${news.description}</td>
-                </tr>`).join("");
-
-            updateMetaTags();
-        }
-
-        function createPagination() {
-            let totalPages = Math.ceil(allNews.length / newsPerPage);
-            document.getElementById("pagination").innerHTML = 
-                Array.from({ length: totalPages }, (_, i) => `<button onclick='changePage(${i + 1})'>${i + 1}</button>`).join(" ");
-        }
-
-        function changePage(page) {
-            currentPage = page;
-            displayNews();
-        }
-
-        fetchNews();
-    });
+            let notice = document.getElementById("notice");
+            if (notice) {
+                notice.classList.add("show");
+            }
+        });
+    </script>
+   <script>
+        document.addEventListener("scroll", function () {
+            let hiddenSections = document.querySelectorAll(".hidden-section");
+            hiddenSections.forEach(section => {
+                let position = section.getBoundingClientRect().top;
+                if (position < window.innerHeight - 50) {
+                    section.classList.add("visible");
+                }
+            });
+        });
+    </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "1337XSearch",
+  "url": "https://yourwebsite.com",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://yourwebsite.com/2ndpage.html?query={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
 </script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://yourwebsite.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Movies",
+      "item": "https://yourwebsite.com/movies"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Games",
+      "item": "https://yourwebsite.com/games"
+    }
+  ]
+}
+</script>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is 1337XSearch safe to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "1337XSearch does not host any files; it only provides search results for torrents."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I search for torrents?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Simply enter your search query in the search box and click 'Search'."
+      }
+    }
+  ]
+}
+
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const menu = document.getElementById("dropdownMenu");
+    const menuBtn = document.querySelector(".menu-btn");
+
+    // Function to toggle menu
+    function toggleMenu() {
+        menu.classList.toggle("open");
+        menuBtn.classList.toggle("open"); // Rotates the button
+    }
+
+    menuBtn.addEventListener("click", toggleMenu);
+
+    // Close menu if clicked outside
+    document.addEventListener("click", function (event) {
+        if (!menu.contains(event.target) && !menuBtn.contains(event.target)) {
+            menu.classList.remove("open");
+            menuBtn.classList.remove("open"); // Reset button animation
+        }
+    });
+});
+</script>
+
 </head>
 <body>
-<a href="index.html" class="home-button">Home</a>
-    <h1>Latest Movies, Games & Torrent News</h1>
-    <table class="news-table">
-        <thead>
-            <tr>
-                <th>Image</th>
-                <th>Title</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody id="news-list"></tbody>
-    </table>
-    <div class="pagination" id="pagination"></div>
-    
-    <script>
-        let currentPage = 1;
-        const newsPerPage = 8;
-        let allNews = [];
+    <!-- Hamburger Button -->
+    <button class="menu-btn" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
 
-        async function fetchNews() {
-            document.getElementById("news-list").innerHTML = "Loading news...";
-            let rssFeeds = [
-                "https://api.rss2json.com/v1/api.json?rss_url=https://www.gamespot.com/feeds/news/",
-                "https://api.rss2json.com/v1/api.json?rss_url=https://www.hollywoodreporter.com/feed/",
-                "https://api.rss2json.com/v1/api.json?rss_url=https://www.ign.com/feeds/movies"
-            ];
+    <!-- Sliding Menu -->
+    <div class="dropdown-menu" id="dropdownMenu">
+    <a href="about-us.html">About Us</a>
+    <a href="description.html">Description</a>
+    <a href="torrent-details.html">Torrent Details</a>
+    <a href="user-manual.html">User Manual</a>
+</div>
+    <div class="disclaimer">
+        <p>Stop wasting time searching everywhere! We bring you the fastest and most reliable way to find free movies, games, music, and more. <strong>Stay safe—always use a VPN!</strong></p>
+    </div>
+    <div class="container">
+        <h1>1337XSearch</h1>
+<img src="background.jpg" alt="Torrent search engine background image" style="display: none;">
+        <div class="search-container">
 
-            try {
-                allNews = [];
-                for (let feedUrl of rssFeeds) {
-                    let response = await fetch(feedUrl);
-                    let data = await response.json();
-                    if (data.items) {
-                        data.items.forEach(item => {
-                            allNews.push({
-                                title: item.title,
-                                link: item.link,
-                                description: item.description.substring(0, 150) + "...",
-                                image: item.thumbnail || "https://via.placeholder.com/800x400"
-                            });
-                        });
-                    }
-                }
-                displayNews();
-                createPagination();
-            } catch (error) {
-                console.error("News Fetch Error:", error);
-                document.getElementById("news-list").innerHTML = "Failed to load news.";
-            }
-        }
+            <input type="text" id="search" class="search-box" placeholder="Search any movies, games, music, and more...">
+            <button class="search-button" onclick="searchTorrents()">Search</button>
+        </div>
+        <div class="categories">
+            <a href="movies.html" class="category-button">Movies</a>
+             <a href="tvshows.html" class="category-button">TV Shows</a>
+             <a href="Games.html" class="category-button">Games</a>
+            <a href="music.html" class="category-button">Music</a>
+            <a href="application.html" class="category-button">Application</a>
+             <a href="anime.html" class="category-button">Anime</a>
+            <button class="category-button" onclick="window.location.href='news.html';">Torrent News</button>
+        </div>
+    </div>
 
-        function displayNews() {
-            let start = (currentPage - 1) * newsPerPage;
-            let end = start + newsPerPage;
-            let paginatedNews = allNews.slice(start, end);
-            document.getElementById("news-list").innerHTML = paginatedNews.map(news => 
-                `<tr>
-                    <td><img src='${news.image}' alt='${news.title}' width='120' height='80'></td>
-                    <td><a href='${news.link}' target='_blank'>${news.title}</a></td>
-                    <td>${news.description}</td>
-                </tr>`
-            ).join("");
-        }
 
-        function createPagination() {
-            let totalPages = Math.ceil(allNews.length / newsPerPage);
-            document.getElementById("pagination").innerHTML = 
-                Array.from({ length: totalPages }, (_, i) => `<button onclick='changePage(${i + 1})'>${i + 1}</button>`).join(" ");
-        }
+<div class="spacer"></div>
 
-        function changePage(page) {
-            currentPage = page;
-            displayNews();
-        }
 
-        fetchNews();
-    </script>
+    <div class="footer hidden-section">
+        <div class="disclaimer">
+            <p><strong>Disclaimer:</strong> This website does not host any torrent files or provide direct downloads. We only show search results to the users to third-party sites.Its a torrent search aggregator only. If you have any legal complaints, please visit the respective websites directly. Mail us in the contact page for promotion and other issues. Thank you have a nice day.</p>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2025 1337XSearch. All rights reserved.</p>
+        </div>
+        <div class="legal-request" id="notice">
+            <h2>Notice to Authorities & Copyright Holders</h2>
+            <p>We kindly request that authorities, copyright holders, and enforcement agencies recognize that 
+        <strong>1337XSearch</strong> is a <em>neutral search engine</em> and not a hosting platform. 
+        We do not control or store any copyrighted content but merely index publicly available information. 
+        If any concerns arise, we are open to discussions and compliance with valid legal requests.
+</p>
+        </div>
+    </div>
+
 </body>
 </html>
+
